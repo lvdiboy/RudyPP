@@ -1,0 +1,49 @@
+app:
+  # 启动完成后自动在默认浏览器中打开登录页面 http://localhost:9333/api/
+  open-browser: true
+server:
+  port: 9333
+  servlet:
+    context-path: /api
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+    username: root
+    password: 123456
+    url: jdbc:h2:mem:jwt-demo
+  h2:
+    console:
+      enabled: true
+      settings:
+        # 只允许本机访问 H2 控制台，避免数据库被局域网中的其他机器访问
+        web-allow-others: false
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        enable_lazy_load_no_trans: true
+    show-sql: true
+  data:
+    # Spring Boot 3.x 中 redis 的配置前缀是 spring.data.redis（旧的 spring.redis 已不再生效）
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      # password:  默认没有密码，生产环境一定要设置密码
+      # 连接超时时间
+      timeout: 10s
+      # Redis默认情况下有16个分片，这里配置具体使用的分片，默认是0
+      database: 0
+      # Spring Boot 默认使用 Lettuce 客户端，连接池依赖 commons-pool2
+      lettuce:
+        pool:
+          enabled: true
+          # 连接池最大连接数（使用负值表示没有限制） 默认 8
+          max-active: 10
+          # 连接池最大阻塞等待时间（使用负值表示没有限制） 默认 -1
+          max-wait: -1ms
+          # 连接池中的最大空闲连接 默认 8
+          max-idle: 8
+          # 连接池中的最小空闲连接 默认 0
+          min-idle: 0

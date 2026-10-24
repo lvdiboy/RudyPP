@@ -1,0 +1,7 @@
+{
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.configuration.updateBuildConfiguration": "automatic",
+  // Bundled Lombok (1.18.39) breaks on newer JDT with source level 17; use the project's version instead
+  "java.jdt.ls.lombokSupport.enabled": false,
+  "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:disable -javaagent:C:/Users/lvdib/.m2/repository/org/projectlombok/lombok/1.18.48/lombok-1.18.48.jar"
+}

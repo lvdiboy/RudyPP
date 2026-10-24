@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>JWT 登录</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/common.css">
+</head>
+<body>
+
+<!-- 未登录：登录 / 注册 -->
+<div class="card" id="authCard">
+    <h1>Spring Security JWT Demo</h1>
+    <p class="subtitle">基于 JWT 的登录与注册示例</p>
+
+    <div class="tabs">
+        <button class="tab active" data-tab="login">登录</button>
+        <button class="tab" data-tab="register">注册</button>
+    </div>
+
+    <form id="loginForm">
+        <label for="loginUsername">用户名</label>
+        <input type="text" id="loginUsername" autocomplete="username" required>
+        <label for="loginPassword">密码</label>
+        <input type="password" id="loginPassword" autocomplete="current-password" required>
+        <label class="checkbox"><input type="checkbox" id="rememberMe"> 记住我（7 天内有效，否则 1 小时）</label>
+        <button type="submit" class="primary">登录</button>
+        <p class="tip">默认管理员账号：root / root</p>
+    </form>
+
+    <form id="registerForm" class="hidden">
+        <label for="regUsername">用户名</label>
+        <input type="text" id="regUsername" autocomplete="username" required>
+        <label for="regFullName">姓名</label>
+        <input type="text" id="regFullName" required>
+        <div class="hint">2-15 位中文、字母或数字，不能全是数字</div>
+        <label for="regPassword">密码</label>
+        <input type="password" id="regPassword" autocomplete="new-password" required>
+        <button type="submit" class="primary">注册</button>
+        <p class="tip">新注册用户默认拥有 USER 和 MANAGER 角色</p>
+    </form>
+
+    <div id="authMessage" class="message"></div>
+</div>
+
+<script src="js/common.js"></script>
+<script>
+    function switchTab(name) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+        $('loginForm').classList.toggle('hidden', name !== 'login');
+        $('registerForm').classList.toggle('hidden', name !== 'register');
+        clearMessage($('authMessage'));
+    }
+
+    document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', () => switchTab(tab.dataset.tab)));
+
+    $('loginForm').addEventListener('submit', async e => {
+        e.preventDefault();
+        const btn = e.submitter;
+        btn.disabled = true;
+        clearMessage($('authMessage'));
+        try {
+            const res = await fetch(API + '/auth/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    username: $('loginUsername').value.trim(),
+                    password: $('loginPassword').value,
+                    rememberMe: $('rememberMe').checked
+                })
+            });
+            if (!res.ok) {
+                showMessage($('authMessage'), await readError(res, '登录失败'), 'error');
+                return;
+            }
+            storage('set', res.headers.get('Authorization'));
+            // 跳转到后端返回的登录后页面
+            const body = await res.json();
+            location.replace(body.redirect);
+        } catch (err) {
+            showMessage($('authMessage'), '无法连接服务器：' + err.message, 'error');
+        } finally {
+            btn.disabled = false;
+        }
+    });
+
+    $('registerForm').addEventListener('submit', async e => {
+        e.preventDefault();
+        const btn = e.submitter;
+        btn.disabled = true;
+        clearMessage($('authMessage'));
+        const userName = $('regUsername').value.trim();
+        try {
+            const res = await fetch(API + '/users/sign-up', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    userName: userName,
+                    fullName: $('regFullName').value.trim(),
+                    password: $('regPassword').value
+                })
+            });
+            if (!res.ok) {
+                showMessage($('authMessage'), await readError(res, '注册失败'), 'error');
+                return;
+            }
+            $('registerForm').reset();
+            switchTab('login');
+            $('loginUsername').value = userName;
+            $('loginPassword').focus();
+            showMessage($('authMessage'), '注册成功，请登录', 'success');
+        } catch (err) {
+            showMessage($('authMessage'), '无法连接服务器：' + err.message, 'error');
+        } finally {
+            btn.disabled = false;
+        }
+    });
+
+    // 已登录时直接进入首页；从首页跳回时显示对应提示
+    if (validClaims(storage('get'))) {
+        location.replace(API + '/home.html');
+    } else {
+        const message = LOGIN_MESSAGES[new URLSearchParams(location.search).get('msg')];
+        if (message) showMessage($('authMessage'), message[0], message[1]);
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            // Main settings are exposed here. Values mirror application.yaml;
+            // env vars override it, so edit them here instead of the yaml for local runs.
+            "type": "java",
+            "name": "RudyPPApplication",
+            "request": "launch",
+            "mainClass": "com.rudypp.RudyPPApplication",
+            "projectName": "rudypp",
+            "cwd": "${workspaceFolder}",
+            // JVM options, e.g. "-Xmx512m -Dfile.encoding=UTF-8"
+            "vmArgs": "",
+            // Program arguments, e.g. "--debug"
+            "args": "",
+            "env": {
+                // Comma-separated Spring profiles; empty = default
+                "SPRING_PROFILES_ACTIVE": "",
+                "SERVER_PORT": "9333",
+                "SERVER_SERVLET_CONTEXT_PATH": "/api",
+                // Open http://localhost:9333/api/ in the browser on startup
+                "APP_OPEN_BROWSER": "true",
+                "SPRING_DATA_REDIS_HOST": "127.0.0.1",
+                "SPRING_DATA_REDIS_PORT": "6379",
+                "SPRING_DATA_REDIS_DATABASE": "0",
+                // Empty = no password (ignored by Spring when blank)
+                "SPRING_DATA_REDIS_PASSWORD": ""
+            }
+        }
+    ]
+}

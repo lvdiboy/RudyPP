@@ -1,0 +1,42 @@
+package com.rudypp.system.entity;
+
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author Rudy Lyu
+ */
+@Getter
+@Setter
+@NoArgsConstructor
+@Entity
+@Table(name = "role")
+public class Role extends AbstractAuditBase {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+    private String description;
+
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<UserRole> userRoles = new ArrayList<>();
+
+    public Role(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+}
