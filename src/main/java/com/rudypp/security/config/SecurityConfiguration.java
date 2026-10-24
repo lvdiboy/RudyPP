@@ -30,7 +30,7 @@ import static java.util.Collections.singletonList;
  * @author Rudy Lyu
  * @version 1.1
  * @date 2020.11.28 14:16
- * @description Spring Security配置类
+ * @description Spring Security configuration
  **/
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -48,7 +48,7 @@ public class SecurityConfiguration {
     }
 
     /**
-     * 密码编码器
+     * Password encoder
      */
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -63,32 +63,29 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                // 禁用 CSRF
+                // Disable CSRF
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authz -> authz
-                    // 指定的接口直接放行
-                    .requestMatchers(SecurityConstants.H2_CONSOLE).permitAll()
+                    // Whitelisted endpoints need no authentication
                     .requestMatchers(HttpMethod.GET, SecurityConstants.STATIC_WHITELIST).permitAll()
                     .requestMatchers(HttpMethod.POST, SecurityConstants.SYSTEM_WHITELIST).permitAll()
-                    // 其他的接口都需要认证后才能请求
+                    // Every other endpoint requires authentication
                     .anyRequest().authenticated()
                 )
-                //添加自定义Filter
+                // Add the custom JWT filter
                 .addFilterBefore(new JwtAuthorizationFilter(authenticationManager, stringRedisTemplate), UsernamePasswordAuthenticationFilter.class)
-                // 不需要session（不创建会话）
+                // Stateless: never create a session
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                // 授权异常处理
+                // Handle authentication and authorization errors
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                     .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                     .accessDeniedHandler(jwtAccessDeniedHandler)
                 );
-        // 允许 H2 web 页面使用同源 Frame，其他页面仍然禁止被第三方站点嵌入
-        http.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()));
         return http.build();
     }
 
     /**
-     * Cors配置优化
+     * CORS configuration
      **/
     @Bean
     CorsConfigurationSource corsConfigurationSource() {

@@ -9,12 +9,12 @@ import java.io.IOException;
 
 /**
  * @author Rudy Lyu
- * @description AuthenticationEntryPoint 用来解决匿名用户访问需要权限才能访问的资源时的异常
+ * @description AuthenticationEntryPoint for anonymous users who access a protected resource
  */
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     /**
-     * 当用户尝试访问需要权限才能的REST资源而不提供Token或者Token错误或者过期时，
-     * 将调用此方法发送401响应以及错误信息
+     * Called when a user tries to access a protected REST resource with a missing, invalid or expired token;
+     * sends a 401 response with the error message
      */
     @Override
     public void commence(HttpServletRequest request,

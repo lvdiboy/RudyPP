@@ -12,8 +12,8 @@ import java.util.Locale;
 
 /**
  * @author Rudy Lyu
- * 项目启动完成后，自动用系统默认浏览器打开登录页面。
- * 通过 app.open-browser=false 可以关闭（测试环境中已关闭）。
+ * Opens the login page in the system's default browser once the app has started.
+ * Turn it off with app.open-browser=false (already off in tests).
  */
 @Slf4j
 @Component
@@ -34,7 +34,7 @@ public class BrowserLauncher {
             contextPath = contextPath.substring(0, contextPath.length() - 1);
         }
         String url = "http://localhost:" + port + contextPath + "/";
-        log.info("登录页面地址: {}", url);
+        log.info("Login page: {}", url);
 
         String os = System.getProperty("os.name", "").toLowerCase(Locale.ROOT);
         ProcessBuilder processBuilder;
@@ -48,7 +48,7 @@ public class BrowserLauncher {
         try {
             processBuilder.start();
         } catch (IOException e) {
-            log.warn("无法自动打开浏览器，请手动访问 {} ({})", url, e.getMessage());
+            log.warn("Could not open a browser, please open {} manually ({})", url, e.getMessage());
         }
     }
 }

@@ -9,12 +9,12 @@ import java.io.IOException;
 
 /**
  * @author Rudy Lyu
- * @description AccessDeineHandler 用来解决认证过的用户访问无权限资源时的异常
+ * @description AccessDeniedHandler for authenticated users who access a resource without enough permission
  */
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
     /**
-     * 当用户尝试访问需要权限才能的REST资源而权限不足的时候，
-     * 将调用此方法发送403响应以及错误信息
+     * Called when a user tries to access a protected REST resource without enough permission;
+     * sends a 403 response with the error message
      */
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {

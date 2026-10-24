@@ -1,5 +1,5 @@
 app:
-  # 启动完成后自动在默认浏览器中打开登录页面 http://localhost:9333/api/
+  # Open the login page http://localhost:9333/api/ in the default browser after startup
   open-browser: true
 server:
   port: 9333
@@ -7,43 +7,51 @@ server:
     context-path: /api
 spring:
   datasource:
-    driverClassName: org.h2.Driver
-    username: root
-    password: 123456
-    url: jdbc:h2:mem:jwt-demo
-  h2:
-    console:
-      enabled: true
-      settings:
-        # 只允许本机访问 H2 控制台，避免数据库被局域网中的其他机器访问
-        web-allow-others: false
+    # Every connection setting can be overridden with environment variables; the defaults are for local development only (local MySQL)
+    # On EC2, enable the prod profile (see application-prod.yaml), which takes all connection settings from environment variables
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:rudypp}?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=utf8
+    username: ${DB_USERNAME:rudypp}
+    password: ${DB_PASSWORD:rudypp}
+    hikari:
+      pool-name: rudypp-pool
+      maximum-pool-size: ${DB_POOL_SIZE:10}
+      minimum-idle: 2
+      # Hikari timeouts are in milliseconds
+      connection-timeout: 30000
+      # 30 minutes; must be shorter than MySQL's wait_timeout (8 hours by default) so the pool never hands out a connection the server has closed
+      max-lifetime: 1800000
   jpa:
     hibernate:
-      ddl-auto: update
+      # Creates tables and adds columns from the entities; switch to validate in production once a migration tool such as Flyway is in place
+      ddl-auto: ${JPA_DDL_AUTO:update}
     open-in-view: false
     properties:
       hibernate:
         enable_lazy_load_no_trans: true
+        # Read and write times in UTC (audit fields createdAt / updatedAt)
+        jdbc:
+          time_zone: UTC
     show-sql: true
   data:
-    # Spring Boot 3.x 中 redis 的配置前缀是 spring.data.redis（旧的 spring.redis 已不再生效）
+    # In Spring Boot 3.x the Redis prefix is spring.data.redis (the old spring.redis no longer works)
     redis:
       host: 127.0.0.1
       port: 6379
-      # password:  默认没有密码，生产环境一定要设置密码
-      # 连接超时时间
+      # password:  no password by default; always set one in production
+      # Connection timeout
       timeout: 10s
-      # Redis默认情况下有16个分片，这里配置具体使用的分片，默认是0
+      # Redis has 16 databases by default; this picks which one to use (default 0)
       database: 0
-      # Spring Boot 默认使用 Lettuce 客户端，连接池依赖 commons-pool2
+      # Spring Boot uses the Lettuce client by default; pooling needs commons-pool2
       lettuce:
         pool:
           enabled: true
-          # 连接池最大连接数（使用负值表示没有限制） 默认 8
+          # Maximum connections in the pool (negative = no limit), default 8
           max-active: 10
-          # 连接池最大阻塞等待时间（使用负值表示没有限制） 默认 -1
+          # Maximum time to wait for a connection (negative = no limit), default -1
           max-wait: -1ms
-          # 连接池中的最大空闲连接 默认 8
+          # Maximum idle connections in the pool, default 8
           max-idle: 8
-          # 连接池中的最小空闲连接 默认 0
+          # Minimum idle connections in the pool, default 0
           min-idle: 0

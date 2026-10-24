@@ -47,7 +47,7 @@ public class UserService {
         User user = userRegisterRequest.toUser();
         user.setPassword(bCryptPasswordEncoder.encode(userRegisterRequest.getPassword()));
         userRepository.save(user);
-        //给用户绑定两个角色：用户和管理者
+        // Give the new user two roles: USER and MANAGER
         Role studentRole = roleRepository.findByName(RoleType.USER.getName()).orElseThrow(() -> new RoleNotFoundException(ImmutableMap.of("roleName", RoleType.USER.getName())));
         Role managerRole = roleRepository.findByName(RoleType.MANAGER.getName()).orElseThrow(() -> new RoleNotFoundException(ImmutableMap.of("roleName", RoleType.MANAGER.getName())));
         userRoleRepository.save(new UserRole(user, studentRole));
@@ -73,7 +73,7 @@ public class UserService {
             revokeToken = revokeToken || !userUpdateRequest.getEnabled();
         }
         userRepository.save(user);
-        // 修改密码或禁用用户后，让该用户已签发的 token 立即失效
+        // After a password change or disabling the user, revoke the user's issued token right away
         if (revokeToken) {
             stringRedisTemplate.delete(user.getId().toString());
         }
@@ -82,7 +82,7 @@ public class UserService {
     public void delete(String userName) {
         User user = find(userName);
         userRepository.deleteByUserName(userName);
-        // 删除用户后，让该用户已签发的 token 立即失效
+        // After deleting the user, revoke the user's issued token right away
         stringRedisTemplate.delete(user.getId().toString());
     }
 

@@ -15,7 +15,7 @@ import java.util.Map;
 
 /**
  * @author Rudy Lyu
- * @description 获取当前请求的用户
+ * @description Gets the user of the current request
  */
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -29,7 +29,7 @@ public class CurrentUserUtil {
         if (username == null || username.isEmpty()) {
             log.error("No username found in security context");
             Map<String, Object> data = new HashMap<>();
-            data.put("message", "未找到当前用户信息，请确认已登录");
+            data.put("message", "Current user not found, please make sure you are logged in");
             throw new UserNameNotFoundException(data);
         }
         log.debug("Getting current user with username: {}", username);

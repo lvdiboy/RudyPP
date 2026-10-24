@@ -1,44 +1,44 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>JWT 登录</title>
+    <title>JWT Login</title>
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="css/common.css">
 </head>
 <body>
 
-<!-- 未登录：登录 / 注册 -->
+<!-- Not logged in: log in / sign up -->
 <div class="card" id="authCard">
     <h1>Spring Security JWT Demo</h1>
-    <p class="subtitle">基于 JWT 的登录与注册示例</p>
+    <p class="subtitle">JWT login and sign-up demo</p>
 
     <div class="tabs">
-        <button class="tab active" data-tab="login">登录</button>
-        <button class="tab" data-tab="register">注册</button>
+        <button class="tab active" data-tab="login">Log in</button>
+        <button class="tab" data-tab="register">Sign up</button>
     </div>
 
     <form id="loginForm">
-        <label for="loginUsername">用户名</label>
+        <label for="loginUsername">User name</label>
         <input type="text" id="loginUsername" autocomplete="username" required>
-        <label for="loginPassword">密码</label>
+        <label for="loginPassword">Password</label>
         <input type="password" id="loginPassword" autocomplete="current-password" required>
-        <label class="checkbox"><input type="checkbox" id="rememberMe"> 记住我（7 天内有效，否则 1 小时）</label>
-        <button type="submit" class="primary">登录</button>
-        <p class="tip">默认管理员账号：root / root</p>
+        <label class="checkbox"><input type="checkbox" id="rememberMe"> Remember me (7 days; otherwise 1 hour)</label>
+        <button type="submit" class="primary">Log in</button>
+        <p class="tip">Default admin account: root / root</p>
     </form>
 
     <form id="registerForm" class="hidden">
-        <label for="regUsername">用户名</label>
+        <label for="regUsername">User name</label>
         <input type="text" id="regUsername" autocomplete="username" required>
-        <label for="regFullName">姓名</label>
+        <label for="regFullName">Full name</label>
         <input type="text" id="regFullName" required>
-        <div class="hint">2-15 位中文、字母或数字，不能全是数字</div>
-        <label for="regPassword">密码</label>
+        <div class="hint">2-15 letters, digits or Chinese characters; cannot be all digits</div>
+        <label for="regPassword">Password</label>
         <input type="password" id="regPassword" autocomplete="new-password" required>
-        <button type="submit" class="primary">注册</button>
-        <p class="tip">新注册用户默认拥有 USER 和 MANAGER 角色</p>
+        <button type="submit" class="primary">Sign up</button>
+        <p class="tip">New users get the USER and MANAGER roles</p>
     </form>
 
     <div id="authMessage" class="message"></div>
@@ -71,15 +71,15 @@
                 })
             });
             if (!res.ok) {
-                showMessage($('authMessage'), await readError(res, '登录失败'), 'error');
+                showMessage($('authMessage'), await readError(res, 'Login failed'), 'error');
                 return;
             }
             storage('set', res.headers.get('Authorization'));
-            // 跳转到后端返回的登录后页面
+            // Go to the page the server returned for after login
             const body = await res.json();
             location.replace(body.redirect);
         } catch (err) {
-            showMessage($('authMessage'), '无法连接服务器：' + err.message, 'error');
+            showMessage($('authMessage'), 'Cannot reach the server: ' + err.message, 'error');
         } finally {
             btn.disabled = false;
         }
@@ -102,22 +102,22 @@
                 })
             });
             if (!res.ok) {
-                showMessage($('authMessage'), await readError(res, '注册失败'), 'error');
+                showMessage($('authMessage'), await readError(res, 'Sign-up failed'), 'error');
                 return;
             }
             $('registerForm').reset();
             switchTab('login');
             $('loginUsername').value = userName;
             $('loginPassword').focus();
-            showMessage($('authMessage'), '注册成功，请登录', 'success');
+            showMessage($('authMessage'), 'Signed up, please log in', 'success');
         } catch (err) {
-            showMessage($('authMessage'), '无法连接服务器：' + err.message, 'error');
+            showMessage($('authMessage'), 'Cannot reach the server: ' + err.message, 'error');
         } finally {
             btn.disabled = false;
         }
     });
 
-    // 已登录时直接进入首页；从首页跳回时显示对应提示
+    // Already logged in: go straight to the home page; when sent back from it, show the matching message
     if (validClaims(storage('get'))) {
         location.replace(API + '/home.html');
     } else {

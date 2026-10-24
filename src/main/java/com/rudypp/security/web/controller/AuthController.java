@@ -18,7 +18,7 @@ import com.rudypp.security.service.AuthService;
 
 /**
  * @author Rudy Lyu
- * @description 认证授权
+ * @description Authentication endpoints
  **/
 @RestController
 @RequestMapping("/auth")
@@ -31,8 +31,8 @@ public class AuthController {
     }
 
     /**
-     * 登录成功后 Token 放在 Authorization 响应头中，响应体中的 redirect 为登录后要跳转的页面。
-     * 这里不使用 302 重定向：前端通过 fetch 调用时浏览器会自动跟随重定向，导致读取不到响应头中的 Token。
+     * On success the token is returned in the Authorization response header, and "redirect" in the body is the page to open next.
+     * No 302 redirect here: fetch would follow it automatically, and the page could no longer read the token from the header.
      */
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {

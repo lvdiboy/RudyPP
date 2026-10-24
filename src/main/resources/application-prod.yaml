@@ -1,0 +1,21 @@
+# Production (AWS EC2) settings, enabled with SPRING_PROFILES_ACTIVE=prod.
+# Values here override the same keys in application.yaml.
+# No secrets in this file: DB_HOST / DB_NAME / DB_USERNAME / DB_PASSWORD must come from environment variables.
+# If any of them is missing the app refuses to start, instead of quietly connecting to the wrong database.
+app:
+  # There is no browser on the server
+  open-browser: false
+spring:
+  datasource:
+    # DB_HOST=localhost when MySQL runs on the same EC2 instance; use the RDS endpoint for RDS.
+    # SSL is required by default (RDS supports it); set DB_SSL_MODE=DISABLED for a local MySQL without certificates
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT:3306}/${DB_NAME}?sslMode=${DB_SSL_MODE:REQUIRED}&serverTimezone=UTC&characterEncoding=utf8
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    show-sql: false
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}

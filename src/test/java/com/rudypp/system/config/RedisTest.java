@@ -19,7 +19,7 @@ public class RedisTest {
     
     @Test
     public void testRedis() {
-        // 保存字符串
+        // Save a string
         stringRedisTemplate.opsForValue().set("test", "hello redis");
         System.out.println(stringRedisTemplate.opsForValue().get("test"));
     }

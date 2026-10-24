@@ -37,7 +37,7 @@ public class AuthService {
         try {
             user = userService.find(loginRequest.getUsername());
         } catch (UserNameNotFoundException ex) {
-            // 用户不存在与密码错误返回相同的提示，避免泄露用户名是否存在
+            // Same message for an unknown user and a wrong password, so we don't reveal which user names exist
             throw new BadCredentialsException("The user name or password is not correct.");
         }
         if (loginRequest.getPassword() == null || !userService.check(loginRequest.getPassword(), user.getPassword())) {
@@ -53,7 +53,7 @@ public class AuthService {
                 .collect(Collectors.toList());
         boolean rememberMe = Boolean.TRUE.equals(loginRequest.getRememberMe());
         String token = JwtTokenUtil.createToken(user.getUserName(), user.getId().toString(), authorities, rememberMe);
-        // redis 中 token 的过期时间与 JWT 保持一致
+        // The token expires in Redis at the same time as the JWT
         stringRedisTemplate.opsForValue().set(user.getId().toString(), token,
                 Duration.ofSeconds(JwtTokenUtil.getExpiration(rememberMe)));
         return token;
