@@ -24,6 +24,12 @@
                 "SERVER_SERVLET_CONTEXT_PATH": "/api",
                 // Open http://localhost:9333/api/ in the browser on startup
                 "APP_OPEN_BROWSER": "true",
+                // Local MySQL; the database is created on first start if it doesn't exist
+                "DB_HOST": "localhost",
+                "DB_PORT": "3306",
+                "DB_NAME": "rudypp",
+                "DB_USERNAME": "rudypp",
+                "DB_PASSWORD": "rudypp",
                 "SPRING_DATA_REDIS_HOST": "127.0.0.1",
                 "SPRING_DATA_REDIS_PORT": "6379",
                 "SPRING_DATA_REDIS_DATABASE": "0",

@@ -31,7 +31,7 @@ public class UserControllerTest extends BaseTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1003))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("方法参数验证失败"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Method argument validation failed"));
     }
 
     @Test

@@ -4,7 +4,7 @@ import lombok.Value;
 
 /**
  * @author Rudy Lyu
- * @description 用户登录请求DTO
+ * @description Login request DTO
  */
 @Value
 public class LoginRequest {

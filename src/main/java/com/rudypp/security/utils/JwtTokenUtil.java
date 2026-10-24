@@ -16,18 +16,18 @@ import java.util.stream.Collectors;
 
 /**
  * @author Rudy Lyu
- * @description JWT工具类
+ * @description JWT utilities
  */
 public class JwtTokenUtil {
 
     /**
-     * 生成足够的安全随机密钥，以适合符合规范的签名
+     * Signing key that is strong enough for a spec-compliant signature
      */
     private static final byte[] API_KEY_SECRET_BYTES = SecurityConstants.JWT_SECRET_KEY.getBytes(StandardCharsets.UTF_8);
     private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor(API_KEY_SECRET_BYTES);
 
     /**
-     * token 有效期（秒）
+     * Token lifetime (seconds)
      */
     public static long getExpiration(boolean isRememberMe) {
         return isRememberMe ? SecurityConstants.EXPIRATION_REMEMBER : SecurityConstants.EXPIRATION;
@@ -51,7 +51,7 @@ public class JwtTokenUtil {
                 .signWith(SECRET_KEY)
                 .compact();
                 
-        return SecurityConstants.TOKEN_PREFIX + tokenPrefix; // 添加 token 前缀 "Bearer ";
+        return SecurityConstants.TOKEN_PREFIX + tokenPrefix; // Add the "Bearer " token prefix
     }
 
     public static String getId(String token) {

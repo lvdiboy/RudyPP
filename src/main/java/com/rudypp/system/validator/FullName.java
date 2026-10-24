@@ -18,7 +18,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({PARAMETER, FIELD})
 @Retention(RUNTIME)
 public @interface FullName {
-    String message() default "姓名格式错误";
+    String message() default "Invalid full name";
 
     Class<?>[] groups() default {};
 

@@ -13,7 +13,7 @@ import java.util.Optional;
 
 /**
  * @author Rudy Lyu
- * @description 审计功能配置类
+ * @description JPA auditing configuration
  */
 @Configuration
 @EnableJpaAuditing

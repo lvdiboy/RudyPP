@@ -9,7 +9,7 @@ A demo project for **stateless JWT authentication and role-based authorization**
 | Language    | Java 25                                   |
 | Framework   | Spring Boot 3.5.0                         |
 | Security    | Spring Security 6.5, JJWT 0.12.3          |
-| Persistence | Spring Data JPA, H2 in-memory database    |
+| Persistence | Spring Data JPA, MySQL 8 (H2 for tests)   |
 | Cache       | Redis (Lettuce + commons-pool2)           |
 | Other       | Lombok, Guava, Bean Validation            |
 | Build       | Maven                                     |
@@ -28,7 +28,7 @@ A demo project for **stateless JWT authentication and role-based authorization**
 
 ```
 src/main/java/com/rudypp
-├── RudyPPApplication.java   # Entry point; creates the default admin user
+├── RudyPPApplication.java   # Entry point
 ├── security                 # JWT filter, security config, auth controller/service
 │   ├── config / filter / exception / utils / constants
 │   └── web                  # /auth endpoints
@@ -36,8 +36,10 @@ src/main/java/com/rudypp
     ├── entity / repository / service / enums / validator / exception
     └── web                  # /users endpoints
 src/main/resources
-├── application.yaml         # Server, H2, JPA and Redis settings
+├── application.yaml         # Shared settings + local MySQL/Redis defaults
+├── application-prod.yaml    # Production (EC2) overrides, all secrets from env vars
 └── static/                  # Login & home pages (HTML/CSS/JS)
+scripts/mysql-init.sql       # Creates the database, app user, tables and initial data
 ```
 
 ## Getting Started
@@ -47,6 +49,17 @@ src/main/resources
 - JDK 25
 - Maven 3.9+
 - A Redis server on `127.0.0.1:6379`. It's required, because tokens are stored in Redis.
+- MySQL 8 on `localhost:3306`.
+
+### Set up MySQL
+
+Create the database and the app user once, as the MySQL root user:
+
+```bash
+mysql -u root -p < scripts/mysql-init.sql
+```
+
+This creates the `rudypp` database and a `rudypp` / `rudypp` user, which match the local defaults in `application.yaml`. It also creates the tables and the initial data: the four roles and the admin account `root` / `root`. It's safe to run again; rows that already exist are skipped.
 
 ### Run
 
@@ -63,10 +76,25 @@ In VS Code, you can use the **RudyPPApplication** launch configuration in `.vsco
 | What                | Value                                                         |
 | ------------------- | ------------------------------------------------------------- |
 | Admin account       | `root` / `root`                                               |
-| H2 console          | http://localhost:9333/api/h2-console (`root` / `123456`, JDBC URL `jdbc:h2:mem:jwt-demo`) |
+| MySQL               | `localhost:3306/rudypp`, user `rudypp` / `rudypp`             |
 | JWT signing key     | Set via the `JWT_SECRET_KEY` env var. A dev-only fallback is built in. |
 
-Database tables are created automatically on startup (`ddl-auto: update`). H2 runs in memory, so all data is lost when the app restarts.
+Database tables are created and updated automatically on startup (`ddl-auto: update`).
+
+### Configuration
+
+All database settings can be overridden with environment variables:
+
+| Variable        | Default (local) | Notes                                             |
+| --------------- | --------------- | ------------------------------------------------- |
+| `DB_HOST`       | `localhost`     | Required in `prod`                                |
+| `DB_PORT`       | `3306`          |                                                   |
+| `DB_NAME`       | `rudypp`        | Required in `prod`                                |
+| `DB_USERNAME`   | `rudypp`        | Required in `prod`                                |
+| `DB_PASSWORD`   | `rudypp`        | Required in `prod`                                |
+| `DB_SSL_MODE`   | `REQUIRED`      | `prod` only. Use `DISABLED` for MySQL on the same host without TLS |
+| `DB_POOL_SIZE`  | `10`            | Maximum number of connections in the pool         |
+| `JPA_DDL_AUTO`  | `update`        | Set to `validate` once schema migrations are in place |
 
 ### Tests
 
@@ -74,7 +102,28 @@ Database tables are created automatically on startup (`ddl-auto: update`). H2 ru
 mvn test
 ```
 
-Some tests need Redis to be running.
+The tests use an H2 in-memory database in MySQL mode, so they don't need MySQL. Some tests need Redis to be running.
+
+## Deploying to AWS EC2
+
+1. **Database**: either install MySQL 8 on the instance and run `scripts/mysql-init.sql` with a strong password, or create an RDS MySQL instance. With RDS, allow port 3306 from the EC2 security group only.
+2. **Build** the jar with `mvn clean package -DskipTests` and copy `target/rudypp-0.0.1-SNAPSHOT.jar` to the instance.
+3. **Configure** the environment. For example, put this in `/etc/rudypp/rudypp.env`, owned by root with `chmod 600`:
+
+   ```bash
+   SPRING_PROFILES_ACTIVE=prod
+   DB_HOST=localhost            # or the RDS endpoint
+   DB_NAME=rudypp
+   DB_USERNAME=rudypp
+   DB_PASSWORD=change-me
+   DB_SSL_MODE=DISABLED         # only for MySQL on the same host without TLS
+   REDIS_HOST=localhost
+   JWT_SECRET_KEY=a-random-string-of-at-least-32-bytes
+   ```
+
+4. **Run** the app, for example as a systemd service with `EnvironmentFile=/etc/rudypp/rudypp.env` and `ExecStart=/usr/bin/java -jar /opt/rudypp/rudypp.jar`.
+
+The `prod` profile turns off SQL logging and the browser launcher. If any of the required `DB_*` variables is missing, the app refuses to start.
 
 ## API
 
@@ -133,7 +182,8 @@ Content-Type: application/json
 
 ## Further Reading
 
-- [docs/SpringSecurity介绍.md](./docs/SpringSecurity介绍.md): an introduction to Spring Security (in Chinese)
+- [docs/spring-security-introduction.md](./docs/spring-security-introduction.md): an introduction to Spring Security and JWT authentication
+- [docs/spring-security-implementation.md](./docs/spring-security-implementation.md): the original project write-up (partly out of date)
 
 ## Author
 

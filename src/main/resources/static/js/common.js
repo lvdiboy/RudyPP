@@ -1,15 +1,15 @@
-// 登录页（index.html）与登录后页面（home.html）共用的工具函数
+// Helpers shared by the login page (index.html) and the home page (home.html)
 
-// 页面部署在 context-path（/api）下，接口地址与页面同源
+// The pages are served under the context path (/api), on the same origin as the API
 const API = location.pathname.replace(/\/[^/]*$/, '');
 const TOKEN_KEY = 'jwt-demo-token';
-const FIELD_LABELS = {userName: '用户名', fullName: '姓名', password: '密码'};
+const FIELD_LABELS = {userName: 'User name', fullName: 'Full name', password: 'Password'};
 
-// 跳回登录页时通过 ?msg= 传递的提示
+// Messages passed with ?msg= when sending the user back to the login page
 const LOGIN_MESSAGES = {
-    logout: ['已退出登录', 'success'],
-    expired: ['登录已过期，请重新登录', 'error'],
-    invalid: ['Token 已失效（可能已在别处登录或已退出），请重新登录', 'error']
+    logout: ['Logged out', 'success'],
+    expired: ['Your session has expired, please log in again', 'error'],
+    invalid: ['Your token is no longer valid (you may have logged in elsewhere or logged out), please log in again', 'error']
 };
 
 const $ = id => document.getElementById(id);
@@ -20,7 +20,7 @@ function storage(action, value) {
         if (action === 'set') localStorage.setItem(TOKEN_KEY, value);
         if (action === 'remove') localStorage.removeItem(TOKEN_KEY);
     } catch (e) {
-        // 浏览器禁用了本地存储时无法跨页面保持登录状态
+        // If the browser blocks local storage, the login can't be kept across pages
     }
     return null;
 }
@@ -35,20 +35,20 @@ function clearMessage(el) {
     el.className = 'message';
 }
 
-// 将后端 ErrorResponse 转换成可读的提示
+// Turns the server's ErrorResponse into a readable message
 async function readError(res, fallback) {
     try {
         const body = await res.json();
         const details = Object.entries(body.data || {})
             .filter(([key]) => key !== 'detail' && key !== 'username:')
-            .map(([key, msg]) => (FIELD_LABELS[key] || key) + '：' + msg);
+            .map(([key, msg]) => (FIELD_LABELS[key] || key) + ': ' + msg);
         return [body.message || fallback, ...details].join('\n');
     } catch (e) {
-        return fallback + '（HTTP ' + res.status + '）';
+        return fallback + ' (HTTP ' + res.status + ')';
     }
 }
 
-// 解析 JWT 中的载荷（仅用于展示，校验由后端完成）
+// Decodes the JWT payload (for display only; the server does the verification)
 function decodeToken(token) {
     try {
         const payload = token.replace(/^Bearer /, '').split('.')[1];
@@ -61,13 +61,13 @@ function decodeToken(token) {
     }
 }
 
-// 返回未过期 Token 的载荷，Token 不存在或已过期时返回 null
+// Returns the payload of a valid token, or null if there is no token or it has expired
 function validClaims(token) {
     const claims = token && decodeToken(token);
     return claims && claims.exp * 1000 > Date.now() ? claims : null;
 }
 
-// 清除本地登录状态并跳回登录页
+// Clears the local login state and goes back to the login page
 function goToLogin(msg) {
     storage('remove');
     location.replace(API + '/index.html' + (msg ? '?msg=' + msg : ''));

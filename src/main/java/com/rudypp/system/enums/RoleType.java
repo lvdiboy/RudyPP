@@ -8,9 +8,9 @@ import lombok.Getter;
  */
 @Getter
 public enum RoleType {
-    USER("USER", "用户"),
-    TEMP_USER("TEMP_USER", "临时用户"),
-    MANAGER("MANAGER", "管理者"),
+    USER("USER", "User"),
+    TEMP_USER("TEMP_USER", "Temporary user"),
+    MANAGER("MANAGER", "Manager"),
     ADMIN("ADMIN", "Admin");
     private final String name;
     private final String description;

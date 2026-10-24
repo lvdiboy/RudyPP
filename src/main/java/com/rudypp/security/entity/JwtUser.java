@@ -8,7 +8,7 @@ import java.util.Collection;
 
 /**
  * @author Rudy Lyu
- * @description JWT用户对象
+ * @description JWT user details
  */
 public class JwtUser implements UserDetails {
 
@@ -22,7 +22,7 @@ public class JwtUser implements UserDetails {
     }
 
     /**
-     * 通过 user 对象创建jwtUser
+     * Creates a JwtUser from a User
      */
     public JwtUser(User user) {
         id = user.getId();

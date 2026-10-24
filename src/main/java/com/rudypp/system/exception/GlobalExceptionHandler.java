@@ -23,7 +23,7 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     /**
-     * 自定义业务异常处理（用户名已存在、用户/角色不存在等），状态码由 ErrorCode 决定
+     * Handles business exceptions (user name already exists, user or role not found, ...); the status code comes from ErrorCode
      */
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<ErrorResponse> handleBaseException(BaseException ex, HttpServletRequest request) {
@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 请求参数异常处理
+     * Handles invalid request arguments
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request) {
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 登录失败（用户名或密码错误、用户被禁用）
+     * Login failed (wrong user name or password, or the user is disabled)
      */
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException ex, HttpServletRequest request) {

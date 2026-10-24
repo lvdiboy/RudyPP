@@ -1,32 +1,32 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>JWT 首页</title>
+    <title>JWT Home</title>
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="css/common.css">
 </head>
 <body>
 
-<!-- 已登录 -->
+<!-- Logged in -->
 <div class="card wide hidden" id="homeCard">
-    <h1 id="welcome">欢迎</h1>
+    <h1 id="welcome">Welcome</h1>
     <div class="chips" id="roles"></div>
     <p class="meta" id="expiry"></p>
 
-    <label for="tokenBox">当前 Token（请求时放在 Authorization 请求头中）</label>
+    <label for="tokenBox">Current token (send it in the Authorization request header)</label>
     <textarea id="tokenBox" readonly></textarea>
 
     <div class="actions">
-        <button class="secondary" id="loadUsersBtn">查看用户列表</button>
-        <button class="secondary" id="logoutBtn">退出登录</button>
+        <button class="secondary" id="loadUsersBtn">Show users</button>
+        <button class="secondary" id="logoutBtn">Log out</button>
     </div>
 
     <div id="homeMessage" class="message"></div>
 
     <table id="userTable" class="hidden">
-        <thead><tr><th>用户名</th><th>姓名</th></tr></thead>
+        <thead><tr><th>User name</th><th>Full name</th></tr></thead>
         <tbody></tbody>
     </table>
 </div>
@@ -37,14 +37,14 @@
     const claims = validClaims(currentToken);
 
     function showHome() {
-        $('welcome').textContent = '欢迎，' + claims.sub;
+        $('welcome').textContent = 'Welcome, ' + claims.sub;
         (claims.rol || '').split(',').filter(Boolean).forEach(role => {
             const chip = document.createElement('span');
             chip.className = 'chip';
             chip.textContent = role.replace(/^ROLE_/, '');
             $('roles').appendChild(chip);
         });
-        $('expiry').textContent = 'Token 过期时间：' + new Date(claims.exp * 1000).toLocaleString();
+        $('expiry').textContent = 'Token expires: ' + new Date(claims.exp * 1000).toLocaleString();
         $('tokenBox').value = currentToken;
         $('homeCard').classList.remove('hidden');
     }
@@ -60,7 +60,7 @@
                 return;
             }
             if (!res.ok) {
-                showMessage($('homeMessage'), await readError(res, '获取用户列表失败'), 'error');
+                showMessage($('homeMessage'), await readError(res, 'Failed to load users'), 'error');
                 return;
             }
             const page = await res.json();
@@ -77,7 +77,7 @@
             });
             $('userTable').classList.remove('hidden');
         } catch (err) {
-            showMessage($('homeMessage'), '无法连接服务器：' + err.message, 'error');
+            showMessage($('homeMessage'), 'Cannot reach the server: ' + err.message, 'error');
         }
     });
 
@@ -85,12 +85,12 @@
         try {
             await fetch(API + '/auth/logout', {method: 'POST', headers: {'Authorization': currentToken}});
         } catch (err) {
-            // 服务器不可用时也清除本地登录状态
+            // Clear the local login state even if the server is unavailable
         }
         goToLogin('logout');
     });
 
-    // 未登录或 Token 已过期时直接回到登录页
+    // Not logged in or token expired: go back to the login page
     if (claims) {
         showHome();
     } else {
