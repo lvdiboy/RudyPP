@@ -67,7 +67,7 @@ This creates the `rudypp` database and a `rudypp` / `rudypp` user, which match t
 ./mvnw spring-boot:run
 ```
 
-The app starts at **http://localhost:9333/api/** and opens it in your default browser. To stop the browser from opening, set `app.open-browser: false` in `application.yaml` or `APP_OPEN_BROWSER=false`.
+The app starts at **http://localhost:9333/api/**. Open it in your browser to use the login page.
 
 In VS Code, you can use the **RudyPPApplication** launch configuration in `.vscode/launch.json`. Its environment variables override `application.yaml`.
 
@@ -123,7 +123,16 @@ The tests use an H2 in-memory database in MySQL mode, so they don't need MySQL. 
 
 4. **Run** the app, for example as a systemd service with `EnvironmentFile=/etc/rudypp/rudypp.env` and `ExecStart=/usr/bin/java -jar /opt/rudypp/rudypp.jar`.
 
-The `prod` profile turns off SQL logging and the browser launcher. If any of the required `DB_*` variables is missing, the app refuses to start.
+The `prod` profile turns off SQL logging. If any of the required `DB_*` variables is missing, the app refuses to start.
+
+## CI (Jenkins)
+
+The [Jenkinsfile](./Jenkinsfile) defines the pipeline: **Checkout → Build → Test → Package → Deploy**.
+
+- It builds with `./mvnw`, so the Jenkins agent only needs JDK 25.
+- The packaged `target/rudypp.jar` is archived with each build.
+- Tests are skipped by default (`SKIP_TESTS` = true) because the Test stage needs Redis on the agent. Untick it, or change the default, once Redis is installed.
+- Deploy runs only for the `develop` branch, in a Multibranch Pipeline job, and is still a placeholder.
 
 ## CI (Jenkins)
 
