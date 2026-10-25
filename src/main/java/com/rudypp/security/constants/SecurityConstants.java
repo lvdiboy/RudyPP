@@ -44,6 +44,12 @@ public final class SecurityConstants {
             "/js/**"
     };
 
+    // Health check for the deploy script and load balancers (only health is exposed, see management.* in application.yaml)
+    public static final String[] ACTUATOR_WHITELIST = {
+            "/actuator/health",
+            "/actuator/health/**"
+    };
+
     // System WHITELIST
     public static final String[] SYSTEM_WHITELIST = {
             "/auth/login",

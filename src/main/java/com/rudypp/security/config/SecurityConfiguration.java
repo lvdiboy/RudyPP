@@ -68,6 +68,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authz -> authz
                     // Whitelisted endpoints need no authentication
                     .requestMatchers(HttpMethod.GET, SecurityConstants.STATIC_WHITELIST).permitAll()
+                    .requestMatchers(HttpMethod.GET, SecurityConstants.ACTUATOR_WHITELIST).permitAll()
                     .requestMatchers(HttpMethod.POST, SecurityConstants.SYSTEM_WHITELIST).permitAll()
                     // Every other endpoint requires authentication
                     .anyRequest().authenticated()

@@ -1,6 +1,6 @@
 // CI pipeline for RudyPP, running on the Jenkins server on AWS EC2.
 // Builds with the Maven Wrapper (./mvnw), so the agent only needs JDK 25; no Maven installation is required.
-// TODO: add the deploy details (target host, credentials, service restart) in the Deploy stage.
+// Requires this Pipeline job SCM to be fixed to */develop. Submit deployment without waiting.
 pipeline {
     agent any
 
@@ -8,15 +8,9 @@ pipeline {
         // Keep the last 10 builds and their artifacts
         buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '5'))
         disableConcurrentBuilds()
-        timeout(time: 30, unit: 'MINUTES')
+        skipDefaultCheckout(true)
+        timeout(time: 60, unit: 'MINUTES')
         timestamps()
-    }
-
-    parameters {
-        // Tests are skipped by default because the Jenkins server has no Redis yet.
-        // TODO: set back to false once Redis is installed on the Jenkins server
-        booleanParam(name: 'SKIP_TESTS', defaultValue: true,
-                description: 'Skip the tests (they need a Redis server reachable at 127.0.0.1:6379)')
     }
 
     triggers {
@@ -29,6 +23,9 @@ pipeline {
         MAVEN_OPTS = '-Xms128m -Xmx512m'
         // Batch mode, no download progress noise in the console log
         MVN = './mvnw -B -ntp'
+        AWS_DEFAULT_REGION = 'us-west-2'
+        AWS_PAGER = ''
+        S3_BUCKET = 'rudypp-cicd-artifacts-322473970370-us-west-2-an'
     }
 
     stages {
@@ -46,10 +43,8 @@ pipeline {
         }
 
         stage('Test') {
-            when {
-                expression { !params.SKIP_TESTS }
-            }
             steps {
+                // Tests need no Redis or MySQL: in-memory H2 and an in-memory Redis fake (see src/test/resources/application.properties)
                 sh "${MVN} test"
             }
             post {
@@ -67,35 +62,70 @@ pipeline {
             }
         }
 
-        stage('Upload to S3') {
+        stage('CodeDeploy ZIP') {
             steps {
                 sh '''
-                    aws s3 cp target/rudypp.jar \
-                    s3://rudypp-cicd-artifacts-322473970370-us-west-2-an/rudypp/builds/${BUILD_NUMBER}/rudypp.jar \
-                    --region us-west-2
+                    set -eu
+                    command -v aws >/dev/null
+                    test -s target/rudypp.jar
+                    test -s appspec.yml
+                    for hook in before_install after_install stop start validate; do
+                        test -s "deploy/${hook}.sh"
+                    done
+                    mkdir -p target/codedeploy/deploy
+                    cp target/rudypp.jar target/codedeploy/rudypp.jar
+                    cp appspec.yml target/codedeploy/appspec.yml
+                    cp deploy/*.sh target/codedeploy/deploy/
+                    sed -i 's/\\r$//' target/codedeploy/appspec.yml target/codedeploy/deploy/*.sh
+                    for hook in target/codedeploy/deploy/*.sh; do bash -n "$hook"; done
+                    chmod 755 target/codedeploy/deploy/*.sh
+                    (cd target/codedeploy && zip -qr ../rudypp-codedeploy.zip appspec.yml rudypp.jar deploy)
+                    unzip -t target/rudypp-codedeploy.zip
+                    unzip -Z1 target/rudypp-codedeploy.zip
+                '''
+                archiveArtifacts artifacts: 'target/rudypp-codedeploy.zip', fingerprint: true
+            }
+        }
+
+        stage('Upload to S3') {
+            steps {
+                script {
+                    env.REVISION_KEY = sh(returnStdout: true, script: '''
+                        set -eu
+                        job_hash=$(printf '%s' "$JOB_NAME" | sha256sum | cut -c1-16)
+                        printf 'rudypp/builds/%s/%s/%s/rudypp-codedeploy.zip' "$job_hash" "$BUILD_NUMBER" "$(git rev-parse HEAD)"
+                    ''').trim()
+                }
+                sh '''
+                    set -eu
+                    aws s3 cp target/rudypp-codedeploy.zip "s3://${S3_BUCKET}/${REVISION_KEY}" --only-show-errors
                 '''
             }
         }
 
         stage('Deploy') {
-            when {
-                // Only deploy builds of the develop branch (requires a Multibranch Pipeline job)
-                branch 'develop'
-            }
             steps {
-                // TODO: copy target/rudypp.jar to the app server and restart the service, e.g.
-                //   sshagent(['ec2-deploy-key']) {
-                //       sh 'scp target/rudypp.jar ec2-user@<APP_HOST>:/opt/rudypp/rudypp.jar'
-                //       sh 'ssh ec2-user@<APP_HOST> sudo systemctl restart rudypp'
-                //   }
-                echo 'Deploy step not configured yet'
+                sh '''
+                    set -eu
+                    aws sts get-caller-identity
+                    aws deploy get-deployment-group --application-name RudyPP --deployment-group-name RudyPP-Production --output json
+                '''
+                script {
+                    env.DEPLOYMENT_ID = sh(returnStdout: true, script: '''
+                        set -eu
+                        aws deploy create-deployment --application-name RudyPP --deployment-group-name RudyPP-Production --s3-location "bucket=${S3_BUCKET},key=${REVISION_KEY},bundleType=zip" --description "Jenkins ${BUILD_TAG}" --query deploymentId --output text
+                    ''').trim()
+                    if (!(env.DEPLOYMENT_ID ==~ /d-[A-Za-z0-9]+/)) {
+                        error('Invalid CodeDeploy deployment ID')
+                    }
+                    echo "CodeDeploy: ${env.DEPLOYMENT_ID}"
+                }
             }
         }
     }
-
     post {
         success {
-            echo "Build ${env.BUILD_NUMBER} succeeded: target/rudypp.jar archived"
+            echo "Build ${env.BUILD_NUMBER} succeeded: artifacts uploaded and CodeDeploy request accepted; track deployment result in AWS"
         }
         failure {
             echo "Build ${env.BUILD_NUMBER} failed, check the stage logs above"

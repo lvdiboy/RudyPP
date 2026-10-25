@@ -1,0 +1,29 @@
+version: 0.0
+os: linux
+files:
+  # Must match ExecStart in rudypp.service: /opt/rudypp/app/rudypp.jar
+  - source: rudypp.jar
+    destination: /opt/rudypp/app
+# The jar there was first copied by hand, not by CodeDeploy; without this the deployment refuses to replace it
+file_exists_behavior: OVERWRITE
+hooks:
+  ApplicationStop:
+    - location: deploy/stop.sh
+      timeout: 60
+      runas: root
+  BeforeInstall:
+    - location: deploy/before_install.sh
+      timeout: 60
+      runas: root
+  AfterInstall:
+    - location: deploy/after_install.sh
+      timeout: 60
+      runas: root
+  ApplicationStart:
+    - location: deploy/start.sh
+      timeout: 60
+      runas: root
+  ValidateService:
+    - location: deploy/validate.sh
+      timeout: 180
+      runas: root

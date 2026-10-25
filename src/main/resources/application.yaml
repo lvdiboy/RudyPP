@@ -2,6 +2,19 @@ server:
   port: 9333
   servlet:
     context-path: /api
+management:
+  endpoints:
+    web:
+      exposure:
+        # Expose only the health endpoint: /api/actuator/health
+        include: health
+  endpoint:
+    health:
+      # Report UP/DOWN only; component details (DB, Redis) stay hidden from anonymous callers
+      show-details: never
+      # Adds /api/actuator/health/liveness and /api/actuator/health/readiness
+      probes:
+        enabled: true
 spring:
   datasource:
     # Every connection setting can be overridden with environment variables; the defaults are for local development only (local MySQL)
