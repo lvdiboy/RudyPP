@@ -132,6 +132,7 @@ The [Jenkinsfile](./Jenkinsfile) defines the pipeline: **Checkout → Build → 
 - It builds with `./mvnw`, so the Jenkins agent only needs JDK 25.
 - The packaged `target/rudypp.jar` is archived with each build.
 - Tests are skipped by default (`SKIP_TESTS` = true) because the Test stage needs Redis on the agent. Untick it, or change the default, once Redis is installed.
+- New commits on `develop` trigger a build automatically: Jenkins polls GitHub every ~5 minutes.
 - Deploy runs only for the `develop` branch, in a Multibranch Pipeline job, and is still a placeholder.
 
 ## API
