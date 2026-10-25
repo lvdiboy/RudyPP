@@ -22,8 +22,6 @@
                 "SPRING_PROFILES_ACTIVE": "",
                 "SERVER_PORT": "9333",
                 "SERVER_SERVLET_CONTEXT_PATH": "/api",
-                // Open http://localhost:9333/api/ in the browser on startup
-                "APP_OPEN_BROWSER": "true",
                 // Local MySQL; the database is created on first start if it doesn't exist
                 "DB_HOST": "localhost",
                 "DB_PORT": "3306",

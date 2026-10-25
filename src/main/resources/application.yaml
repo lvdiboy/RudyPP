@@ -1,6 +1,3 @@
-app:
-  # Open the login page http://localhost:9333/api/ in the default browser after startup
-  open-browser: true
 server:
   port: 9333
   servlet:

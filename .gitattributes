@@ -1,0 +1,9 @@
+# Shell scripts must keep LF line endings, or they fail on the Linux Jenkins agent
+mvnw text eol=lf
+*.sh text eol=lf
+Jenkinsfile text eol=lf
+# Windows scripts
+*.cmd text eol=crlf
+# Binary files
+*.png binary
+*.jar binary

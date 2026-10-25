@@ -109,7 +109,32 @@
     </dependencies>
 
     <build>
+        <!-- Stable jar name (target/rudypp.jar) so the CI pipeline and deploy scripts don't depend on the version -->
+        <finalName>rudypp</finalName>
         <plugins>
+            <!-- Fail fast with a clear message when the build runs on the wrong JDK or Maven (e.g. on a CI agent) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce-build-environment</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>[${java.version},)</version>
+                                </requireJavaVersion>
+                                <requireMavenVersion>
+                                    <version>[3.9,)</version>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
