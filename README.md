@@ -4,15 +4,15 @@ A demo project for **stateless JWT authentication and role-based authorization**
 
 ## Tech Stack
 
-| Area        | Technology                                |
-| ----------- | ----------------------------------------- |
-| Language    | Java 25                                   |
-| Framework   | Spring Boot 3.5.0                         |
-| Security    | Spring Security 6.5, JJWT 0.12.3          |
-| Persistence | Spring Data JPA, MySQL 8 (H2 for tests)   |
-| Cache       | Redis (Lettuce + commons-pool2)           |
-| Other       | Lombok, Guava, Bean Validation            |
-| Build       | Maven (wrapper), Jenkins                  |
+| Area        | Technology                              |
+| ----------- | --------------------------------------- |
+| Language    | Java 25                                 |
+| Framework   | Spring Boot 3.5.0                       |
+| Security    | Spring Security 6.5, JJWT 0.12.3        |
+| Persistence | Spring Data JPA, MySQL 8 (H2 for tests) |
+| Cache       | Redis (Lettuce + commons-pool2)         |
+| Other       | Lombok, Guava, Bean Validation          |
+| Build       | Maven (wrapper), Jenkins                |
 
 ## Features
 
@@ -73,11 +73,11 @@ In VS Code, you can use the **RudyPPApplication** launch configuration in `.vsco
 
 ### Defaults
 
-| What                | Value                                                         |
-| ------------------- | ------------------------------------------------------------- |
-| Admin account       | `root` / `root`                                               |
-| MySQL               | `localhost:3306/rudypp`, user `rudypp` / `rudypp`             |
-| JWT signing key     | Set via the `JWT_SECRET_KEY` env var. A dev-only fallback is built in. |
+| What            | Value                                                                  |
+| --------------- | ---------------------------------------------------------------------- |
+| Admin account   | `root` / `root`                                                        |
+| MySQL           | `localhost:3306/rudypp`, user `rudypp` / `rudypp`                      |
+| JWT signing key | Set via the `JWT_SECRET_KEY` env var. A dev-only fallback is built in. |
 
 Database tables are created and updated automatically on startup (`ddl-auto: update`).
 
@@ -85,16 +85,16 @@ Database tables are created and updated automatically on startup (`ddl-auto: upd
 
 All database settings can be overridden with environment variables:
 
-| Variable        | Default (local) | Notes                                             |
-| --------------- | --------------- | ------------------------------------------------- |
-| `DB_HOST`       | `localhost`     | Required in `prod`                                |
-| `DB_PORT`       | `3306`          |                                                   |
-| `DB_NAME`       | `rudypp`        | Required in `prod`                                |
-| `DB_USERNAME`   | `rudypp`        | Required in `prod`                                |
-| `DB_PASSWORD`   | `rudypp`        | Required in `prod`                                |
-| `DB_SSL_MODE`   | `REQUIRED`      | `prod` only. Use `DISABLED` for MySQL on the same host without TLS |
-| `DB_POOL_SIZE`  | `10`            | Maximum number of connections in the pool         |
-| `JPA_DDL_AUTO`  | `update`        | Set to `validate` once schema migrations are in place |
+| Variable       | Default (local) | Notes                                                              |
+| -------------- | --------------- | ------------------------------------------------------------------ |
+| `DB_HOST`      | `localhost`     | Required in `prod`                                                 |
+| `DB_PORT`      | `3306`          |                                                                    |
+| `DB_NAME`      | `rudypp`        | Required in `prod`                                                 |
+| `DB_USERNAME`  | `rudypp`        | Required in `prod`                                                 |
+| `DB_PASSWORD`  | `rudypp`        | Required in `prod`                                                 |
+| `DB_SSL_MODE`  | `REQUIRED`      | `prod` only. Use `DISABLED` for MySQL on the same host without TLS |
+| `DB_POOL_SIZE` | `10`            | Maximum number of connections in the pool                          |
+| `JPA_DDL_AUTO` | `update`        | Set to `validate` once schema migrations are in place              |
 
 ### Tests
 
@@ -148,14 +148,14 @@ The [Jenkinsfile](./Jenkinsfile) defines the pipeline: **Checkout → Build → 
 
 All paths are relative to `http://localhost:9333/api`.
 
-| Method   | Path                    | Access                          | Description                         |
-| -------- | ----------------------- | ------------------------------- | ----------------------------------- |
-| `POST`   | `/users/sign-up`        | Public                          | Register (new users get `USER` + `MANAGER`) |
-| `POST`   | `/auth/login`           | Public                          | Log in, returns a JWT               |
-| `POST`   | `/auth/logout`          | Authenticated                   | Log out and revoke the token        |
-| `GET`    | `/users`                | `USER`, `MANAGER`, `ADMIN`      | List users (paged)                  |
-| `PUT`    | `/users`                | `ADMIN`                         | Update a user                       |
-| `DELETE` | `/users?username=xxx`   | `ADMIN`                         | Delete a user                       |
+| Method   | Path                  | Access                     | Description                                 |
+| -------- | --------------------- | -------------------------- | ------------------------------------------- |
+| `POST`   | `/users/sign-up`      | Public                     | Register (new users get `USER` + `MANAGER`) |
+| `POST`   | `/auth/login`         | Public                     | Log in, returns a JWT                       |
+| `POST`   | `/auth/logout`        | Authenticated              | Log out and revoke the token                |
+| `GET`    | `/users`              | `USER`, `MANAGER`, `ADMIN` | List users (paged)                          |
+| `PUT`    | `/users`              | `ADMIN`                    | Update a user                               |
+| `DELETE` | `/users?username=xxx` | `ADMIN`                    | Delete a user                               |
 
 ### Examples
 
@@ -206,4 +206,5 @@ Content-Type: application/json
 
 ## Author
 
+//This is the first test for Jenkins auto-build.
 **Rudy Lyu** (lvdiboy@gmail.com)
