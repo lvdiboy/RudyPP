@@ -134,6 +134,15 @@ The [Jenkinsfile](./Jenkinsfile) defines the pipeline: **Checkout → Build → 
 - Tests are skipped by default (`SKIP_TESTS` = true) because the Test stage needs Redis on the agent. Untick it, or change the default, once Redis is installed.
 - Deploy runs only for the `develop` branch, in a Multibranch Pipeline job, and is still a placeholder.
 
+## CI (Jenkins)
+
+The [Jenkinsfile](./Jenkinsfile) defines the pipeline: **Checkout → Build → Test → Package → Deploy**.
+
+- It builds with `./mvnw`, so the Jenkins agent only needs JDK 25.
+- The packaged `target/rudypp.jar` is archived with each build.
+- The Test stage needs Redis on the agent. Without it, run the job with the `SKIP_TESTS` parameter.
+- Deploy runs only for the `develop` branch, in a Multibranch Pipeline job, and is still a placeholder.
+
 ## API
 
 All paths are relative to `http://localhost:9333/api`.
