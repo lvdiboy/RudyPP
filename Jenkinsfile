@@ -20,6 +20,7 @@ pipeline {
     }
 
     triggers {
+        // Trigger a build on every push to the repository (requires GitHub plugin and webhook configured)
         githubPush()
     }
 
