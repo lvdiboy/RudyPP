@@ -20,12 +20,8 @@ pipeline {
     }
 
     triggers {
-        // Build automatically when develop has new commits: Jenkins checks GitHub every ~5 minutes
-        // ("H" spreads the start time so jobs don't all poll at once).
-        // Polling is used because Jenkins isn't reachable from the internet yet (SSH tunnel only),
-        // so GitHub can't call a webhook. Once it is, switch to githubPush() for instant builds.
-        // In a Multibranch Pipeline only develop polls; in a single-branch Pipeline job BRANCH_NAME is unset.
-        pollSCM(env.BRANCH_NAME == null || env.BRANCH_NAME == 'develop' ? 'H/5 * * * *' : '')
+        // Trigger a build on every push to the repository (requires GitHub plugin and webhook configured)
+        githubPush()
     }
 
     environment {
@@ -72,14 +68,14 @@ pipeline {
         }
 
         stage('Upload to S3') {
-    steps {
-        sh '''
-            aws s3 cp target/rudypp.jar \
-              s3://YOUR-BUCKET-NAME/rudypp/builds/${BUILD_NUMBER}/rudypp.jar \
-              --region us-west-2
-        '''
-    }
-}
+            steps {
+                sh '''
+                    aws s3 cp target/rudypp.jar \
+                    s3://rudypp-cicd-artifacts-322473970370-us-west-2-an/rudypp/builds/${BUILD_NUMBER}/rudypp.jar \
+                    --region us-west-2
+                '''
+            }
+        }
 
         stage('Deploy') {
             when {
