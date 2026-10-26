@@ -1,9 +1,9 @@
-import ButtonLink from '../../components/ui/Button/ButtonLink.tsx';
-import Card from '../../components/ui/Card/Card.tsx';
-import { useI18n } from '../../i18n/useI18n.ts';
+import ButtonLink from '../../../components/ui/Button/ButtonLink.tsx';
+import Card from '../../../components/ui/Card/Card.tsx';
+import { useI18n } from '../../../i18n/useI18n.ts';
 import styles from './LearningPage.module.css';
 import TokenPlayground from './TokenPlayground.tsx';
-import { learningTopics, sampleJournalEntries } from './homeContent.ts';
+import { learningTopics, sampleJournalEntries } from './learningContent.ts';
 
 const STACK = ['Java 25', 'Spring Boot 3.5', 'Spring Security', 'MySQL', 'Redis', 'React'];
 

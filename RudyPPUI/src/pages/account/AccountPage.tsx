@@ -11,7 +11,7 @@ import { fetchUsers, USER_LIST_ROLES } from '../../features/users/api.ts';
 import type { Page, UserSummary } from '../../features/users/types.ts';
 import { errorMessage } from '../../i18n/errorMessage.ts';
 import { useI18n } from '../../i18n/useI18n.ts';
-import { ApiError } from '../../lib/api-error.ts';
+import { ApiError } from '../../lib/apiError.ts';
 import styles from './AccountPage.module.css';
 
 const PREVIEW_SIZE = 5;

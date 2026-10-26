@@ -65,16 +65,19 @@ pipeline {
                 // Tests already ran in the Test stage; the UI from the Build stage is copied into the jar
                 sh "${MVN} package -DskipTests ${SKIP_UI_BUILD}"
                 // Fail here, not on EC2, if the jar was packaged without the UI or with a mismatched build:
-                // index.html must be there, and so must every asset it loads
+                // index.html must be there, and so must every local file it loads (hashed assets and favicons)
                 sh '''
                     set -eu
                     unzip -p target/rudypp.jar BOOT-INF/classes/static/index.html > target/ui-index.html
-                    assets=$(grep -o 'assets/[^"]*' target/ui-index.html | sort -u)
-                    test -n "$assets"
-                    for asset in $assets; do
-                        unzip -l target/rudypp.jar "BOOT-INF/classes/static/$asset" > /dev/null
+                    files=$(grep -oE '(src|href)="/[^"/][^"]*"' target/ui-index.html | sed -E 's/^(src|href)="\\///; s/"$//' | sort -u)
+                    echo "$files" | grep -q '^assets/'
+                    for file in $files; do
+                        if ! unzip -l target/rudypp.jar "BOOT-INF/classes/static/$file" > /dev/null; then
+                            echo "Missing from the jar: static/$file (referenced by index.html)"
+                            exit 1
+                        fi
                     done
-                    echo "UI in jar: index.html and its $(echo "$assets" | wc -l) asset(s) are present"
+                    echo "UI in jar: index.html and the $(echo "$files" | wc -l) file(s) it loads are present"
                 '''
                 archiveArtifacts artifacts: 'target/rudypp.jar', fingerprint: true
             }

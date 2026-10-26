@@ -1,12 +1,12 @@
 import { Pencil, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { useSearchParams } from 'react-router';
-import Alert from '../../components/ui/Alert/Alert.tsx';
-import Button from '../../components/ui/Button/Button.tsx';
-import ConfirmDialog from '../../components/ui/ConfirmDialog/ConfirmDialog.tsx';
-import TextArea from '../../components/ui/TextField/TextArea.tsx';
-import TextField from '../../components/ui/TextField/TextField.tsx';
-import { noteDraftStore, type NoteDraft } from '../../features/notes/draft.ts';
+import Alert from '../../../components/ui/Alert/Alert.tsx';
+import Button from '../../../components/ui/Button/Button.tsx';
+import ConfirmDialog from '../../../components/ui/ConfirmDialog/ConfirmDialog.tsx';
+import TextArea from '../../../components/ui/TextField/TextArea.tsx';
+import TextField from '../../../components/ui/TextField/TextField.tsx';
+import { noteDraftStore, type NoteDraft } from '../../../features/notes/draft.ts';
 import {
   NOTE_LIMITS,
   useNotes,
@@ -14,18 +14,18 @@ import {
   type Note,
   type NoteFieldProblem,
   type NoteProblems,
-} from '../../features/notes/notes.ts';
-import Counter from '../../features/workspace/components/Counter.tsx';
-import StatusMessage from '../../features/workspace/components/StatusMessage.tsx';
-import StorageProblem from '../../features/workspace/components/StorageProblem.tsx';
-import tool from '../../features/workspace/components/tool.module.css';
-import WorkspacePage from '../../features/workspace/components/WorkspacePage.tsx';
-import { failureMessage } from '../../features/workspace/failureMessage.ts';
-import type { StorageFailure } from '../../features/workspace/storage.ts';
-import { useWorkspaceNamespace } from '../../features/workspace/useWorkspaceNamespace.ts';
-import type { Messages } from '../../i18n/locales/en.ts';
-import { useI18n } from '../../i18n/useI18n.ts';
-import { matchesQuery } from '../../lib/text.ts';
+} from '../../../features/notes/notes.ts';
+import Counter from '../../../features/workspace/components/Counter.tsx';
+import StatusMessage from '../../../features/workspace/components/StatusMessage.tsx';
+import StorageProblem from '../../../features/workspace/components/StorageProblem.tsx';
+import tool from '../../../features/workspace/components/tool.module.css';
+import WorkspacePage from '../../../features/workspace/components/WorkspacePage.tsx';
+import { failureMessage } from '../../../features/workspace/failureMessage.ts';
+import type { StorageFailure } from '../../../features/workspace/storage.ts';
+import { useWorkspaceNamespace } from '../../../features/workspace/useWorkspaceNamespace.ts';
+import type { Messages } from '../../../i18n/locales/en.ts';
+import { useI18n } from '../../../i18n/useI18n.ts';
+import { matchesQuery } from '../../../lib/text.ts';
 
 type Editor = {
   /** null while writing a new note. */

@@ -26,7 +26,7 @@ React, CSS Modules, CSS custom properties and Lucide icons, in the colors of the
 | List state | `features/workspace/useCollection.ts` | Loads, reloads after changes, follows other tabs, returns results instead of throwing |
 | Shared UI | `ConfirmDialog`, `TextArea`, `TextField` `hint`, `StorageProblem`, `StatusMessage`, `Counter`, `tool.module.css` | |
 | Modules | `features/notes`, `features/bookmarks`, `features/tasks` | Each owns its type, limits, validation and local repository |
-| Pages | `pages/dashboard` (overview, not-found), `pages/learning`, `pages/notes`, `pages/bookmarks`, `pages/tasks` | |
+| Pages | `pages/dashboard` (overview, not-found) and inside it `learning/`, `notes/`, `bookmarks/`, `tasks/` (folders mirror the URLs) | |
 
 `modules.ts` uses a discriminated union. An **active** module must have a `/dashboard/...` path;
 a **planned** module has none and is rendered as information ("Planned"), never as a link.
@@ -93,7 +93,7 @@ Components only use the `Repository` contract through `useCollection`. To sync a
    validation, a record check, and `createLocalKnowledgeRepository(namespace)` built on
    `createLocalCollection(namespace, 'knowledge', isEntry)`. Add a `useKnowledge()` hook that
    calls `useCollection`.
-2. **Page:** create `src/pages/knowledge/KnowledgePage.tsx` using `WorkspacePage`,
+2. **Page:** create `src/pages/dashboard/knowledge/KnowledgePage.tsx` using `WorkspacePage`,
    `StorageProblem`, `StatusMessage`, `ConfirmDialog` and `tool.module.css`.
 3. **Module list:** in `modules.ts`, change `knowledge` from `status: 'planned'` to
    `status: 'active'` with `path: '/dashboard/knowledge'`, a `group` and a `tint`.

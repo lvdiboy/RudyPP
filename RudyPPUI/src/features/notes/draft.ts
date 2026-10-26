@@ -1,4 +1,4 @@
-import { readJson, removeKey, writeJson } from '../../lib/browser-storage.ts';
+import { readJson, removeKey, writeJson } from '../../lib/browserStorage.ts';
 import { workspaceKey } from '../workspace/storage.ts';
 
 /*

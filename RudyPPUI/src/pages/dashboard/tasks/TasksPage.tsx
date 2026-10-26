@@ -1,10 +1,10 @@
 import { Plus, Trash2 } from 'lucide-react';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { useSearchParams } from 'react-router';
-import Alert from '../../components/ui/Alert/Alert.tsx';
-import Button from '../../components/ui/Button/Button.tsx';
-import ConfirmDialog from '../../components/ui/ConfirmDialog/ConfirmDialog.tsx';
-import TextField from '../../components/ui/TextField/TextField.tsx';
+import Alert from '../../../components/ui/Alert/Alert.tsx';
+import Button from '../../../components/ui/Button/Button.tsx';
+import ConfirmDialog from '../../../components/ui/ConfirmDialog/ConfirmDialog.tsx';
+import TextField from '../../../components/ui/TextField/TextField.tsx';
 import {
   TASK_FILTERS,
   TASK_LIMITS,
@@ -12,15 +12,15 @@ import {
   useTasks,
   validateTaskTitle,
   type Task,
-} from '../../features/tasks/tasks.ts';
-import Counter from '../../features/workspace/components/Counter.tsx';
-import StatusMessage from '../../features/workspace/components/StatusMessage.tsx';
-import StorageProblem from '../../features/workspace/components/StorageProblem.tsx';
-import tool from '../../features/workspace/components/tool.module.css';
-import WorkspacePage from '../../features/workspace/components/WorkspacePage.tsx';
-import { failureMessage } from '../../features/workspace/failureMessage.ts';
-import type { StorageFailure } from '../../features/workspace/storage.ts';
-import { useI18n } from '../../i18n/useI18n.ts';
+} from '../../../features/tasks/tasks.ts';
+import Counter from '../../../features/workspace/components/Counter.tsx';
+import StatusMessage from '../../../features/workspace/components/StatusMessage.tsx';
+import StorageProblem from '../../../features/workspace/components/StorageProblem.tsx';
+import tool from '../../../features/workspace/components/tool.module.css';
+import WorkspacePage from '../../../features/workspace/components/WorkspacePage.tsx';
+import { failureMessage } from '../../../features/workspace/failureMessage.ts';
+import type { StorageFailure } from '../../../features/workspace/storage.ts';
+import { useI18n } from '../../../i18n/useI18n.ts';
 import styles from './TasksPage.module.css';
 
 // What to announce; turned into text at render time so it follows a language switch

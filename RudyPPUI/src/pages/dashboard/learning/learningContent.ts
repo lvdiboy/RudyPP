@@ -1,5 +1,5 @@
-import type { CardAccent } from '../../components/ui/Card/Card.tsx';
-import type { Messages } from '../../i18n/locales/en.ts';
+import type { CardAccent } from '../../../components/ui/Card/Card.tsx';
+import type { Messages } from '../../../i18n/locales/en.ts';
 
 /*
  * Structure only (ids, colors, dates). The text for each item lives in the i18n dictionaries
