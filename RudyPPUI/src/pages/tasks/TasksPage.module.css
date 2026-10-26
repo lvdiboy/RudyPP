@@ -1,0 +1,115 @@
+.addForm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.addField {
+  flex: 1 1 16rem;
+}
+
+/* Line the button up with the input (below the label) */
+.addButton {
+  margin-top: 26px;
+}
+
+.filterRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.filters {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--workspace-line);
+  border-radius: 999px;
+  background: var(--workspace-surface);
+}
+
+.filter {
+  min-height: 36px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Selected filter: filled and bold */
+.filter[aria-pressed='true'] {
+  background: var(--workspace-ink);
+  color: var(--workspace-surface);
+  font-weight: 700;
+}
+
+.task {
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 10px;
+  padding-block: 10px;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 40px;
+  cursor: pointer;
+}
+
+.check input {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: var(--workspace-ink);
+}
+
+.title {
+  overflow-wrap: anywhere;
+}
+
+.titleDone {
+  color: var(--workspace-muted);
+  text-decoration: line-through;
+  overflow-wrap: anywhere;
+}
+
+/* The status is spelled out, not shown by color or strike-through alone */
+.badge,
+.badgeDone {
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.badge {
+  border: 1px solid var(--workspace-line);
+}
+
+.badgeDone {
+  background: var(--workspace-green);
+}
+
+@media (max-width: 30rem) {
+  .deleteText {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .addButton {
+    width: 100%;
+    margin-top: 0;
+  }
+}

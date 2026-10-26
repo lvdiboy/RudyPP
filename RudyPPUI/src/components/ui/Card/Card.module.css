@@ -1,0 +1,21 @@
+.card {
+  padding: var(--space-5);
+  border: var(--border-width) solid var(--color-ink);
+  border-top-width: 10px;
+  border-top-color: var(--card-accent);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+/* Each accent variant only sets the custom property the base rule reads */
+.highlight {
+  --card-accent: var(--color-highlight);
+}
+
+.pink {
+  --card-accent: var(--color-pink);
+}
+
+.teal {
+  --card-accent: var(--color-teal);
+}

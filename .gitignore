@@ -66,6 +66,7 @@ bin/
 .vscode/*
 !.vscode/settings.json
 !.vscode/launch.json
+!.vscode/tasks.json
 !.vscode/extensions.json
 .history/
 
@@ -80,3 +81,10 @@ $RECYCLE.BIN/
 .env
 .env.*
 *.local
+
+# ===== Frontend (RudyPPUI) =====
+RudyPPUI/node_modules/
+RudyPPUI/dist/
+RudyPPUI/coverage/
+RudyPPUI/playwright-report/
+RudyPPUI/test-results/

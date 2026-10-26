@@ -1,10 +1,11 @@
 server:
   port: 9333
-  servlet:
-    context-path: /api
+  # No servlet context path: the React UI is served at /, REST controllers get the /api prefix in WebConfig
 management:
   endpoints:
     web:
+      # Keeps the health check at /api/actuator/health (used by deploy/validate.sh)
+      base-path: /api/actuator
       exposure:
         # Expose only the health endpoint: /api/actuator/health
         include: health
