@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Outlet } from 'react-router';
-import SiteFooter from '../components/SiteFooter.tsx';
-import SiteHeader from '../components/SiteHeader.tsx';
+import SiteFooter from './SiteFooter.tsx';
+import SiteHeader from './SiteHeader.tsx';
 import { useI18n } from '../i18n/useI18n.ts';
 import styles from './PageFrame.module.css';
 

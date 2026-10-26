@@ -1,4 +1,4 @@
-import HeaderNav from '../components/HeaderNav.tsx';
+import HeaderNav from './HeaderNav.tsx';
 import UserMenu from '../features/auth/components/UserMenu.tsx';
 import { useI18n } from '../i18n/useI18n.ts';
 import PageFrame from './PageFrame.tsx';

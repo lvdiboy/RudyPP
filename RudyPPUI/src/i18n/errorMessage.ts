@@ -1,4 +1,4 @@
-import { ApiError } from '../lib/api-error.ts';
+import { ApiError } from '../lib/apiError.ts';
 import type { Messages } from './locales/en.ts';
 
 /**

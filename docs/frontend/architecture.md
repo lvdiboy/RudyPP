@@ -39,20 +39,21 @@ RudyPPUI/src/
 │   └── router.tsx           URL map (keep in sync with the backend's UiRouteController)
 ├── layouts/
 │   ├── PageFrame.tsx        Skip link, header (nav + top-right slot), <main>, footer
+│   ├── SiteHeader.tsx, HeaderNav.tsx, SiteFooter.tsx  Parts of PageFrame and the layouts
 │   ├── SiteLayout.tsx       Not-found page: Log in button / user menu
 │   ├── AuthLayout.tsx       /login: header with a way home, no login button
 │   ├── AccountLayout.tsx    /account: account nav, user menu
 │   └── DashboardLayout.tsx  /dashboard/*: workspace sidebar / drawer, top bar, module page
 ├── assets/coast.jpeg        Home page photo (imported, so the build hashes it)
-├── pages/
-│   ├── home/                HomePage + OceanHome (own header/footer)
-│   ├── dashboard/           Workspace overview (/dashboard) and the workspace not-found page
-│   ├── learning/            Front-end learning module (was the first dashboard): topics, sample
-│   │                        journal, project, TokenPlayground; keeps its lab look
-│   ├── notes/, bookmarks/, tasks/  Workspace tools (browser-local data)
-│   ├── account/             User menu → Account: session details and members
-│   ├── login/               Full-page login
-│   └── not-found/
+├── pages/                   One folder per URL; nested URLs are nested folders
+│   ├── home/                /            HomePage + OceanHome (own header/footer)
+│   ├── login/               /login       Full-page login
+│   ├── account/             /account     User menu → Account: session details and members
+│   ├── dashboard/           /dashboard   Workspace overview and the workspace not-found page
+│   │   ├── learning/        /dashboard/learning  Front-end learning module: topics, sample
+│   │   │                    journal, project, TokenPlayground; keeps its lab look
+│   │   └── notes/, bookmarks/, tasks/  /dashboard/…  Workspace tools (browser-local data)
+│   └── not-found/           Any other URL
 ├── features/
 │   ├── auth/                api.ts, session.ts (storage + JWT claims), AuthProvider, useAuth,
 │   │                        RequireAuth, roles.ts, components/ (LoginForm, LoginPanel,
@@ -68,12 +69,14 @@ RudyPPUI/src/
 │   ├── useI18n.ts           const { t, locale } = useI18n()
 │   └── errorMessage.ts      ApiError → message in the current language
 ├── components/
-│   ├── SiteHeader.tsx, HeaderNav.tsx, SiteFooter.tsx
 │   ├── LanguageToggle.tsx   中文 / EN switch, in every header's top-right corner
-│   └── ui/                  Alert, Button (+ ButtonLink), Card, Checkbox, Spinner, TextField
+│   └── ui/                  Alert, Button (+ ButtonLink), Card, Checkbox, ConfirmDialog,
+│                            Spinner, TextField (+ TextArea)
 ├── lib/
 │   ├── http.ts              fetch wrapper: /api base, JSON, token header, errors
-│   └── api-error.ts         ApiError: JSON error bodies and empty security responses
+│   ├── apiError.ts          ApiError: JSON error bodies and empty security responses
+│   ├── browserStorage.ts    localStorage reads and writes that report failures instead of throwing
+│   └── id.ts, text.ts       New record ids; character counts and search matching
 ├── styles/                  tokens.css, global.css
 └── main.tsx
 ```
@@ -88,7 +91,7 @@ Folders are created when they get their first file. `e2e/` does not exist yet.
    (`TokenPlayground`).
 4. **features**: business behavior, API contracts and domain types (from milestone 3).
 5. **components/ui**: props in, markup out. They know nothing about endpoints or tokens.
-6. **lib**: transport and error mechanics (`http.ts`, `api-error.ts`), independent of React.
+6. **lib**: transport and error mechanics (`http.ts`, `apiError.ts`, `browserStorage.ts`), independent of React.
 7. **styles**: the shared visual language. Components read tokens and never hard-code values.
 
 Data flow once APIs are used: `Page → feature → features/x/api.ts → lib/http.ts → /api/...`.
@@ -115,7 +118,7 @@ top-right corner of every header, and switching re-renders the visible page in p
    the error (or a reason code) in state, not its text, so a language switch also translates
    messages already on screen.
 6. **Data vs text**: lists keep their structure (ids, colors, dates) in code, with their text in
-   the dictionaries under matching ids (see `pages/learning/homeContent.ts`).
+   the dictionaries under matching ids (see `pages/dashboard/learning/learningContent.ts`).
 7. **Left untranslated on purpose**: the product name RudyPP, code identifiers, and the language
    switch's own labels (each names the target language in that language).
 8. **Default language**: the visitor's saved choice (`localStorage` key `rudypp.language`),
@@ -206,7 +209,7 @@ the multi-tab rule and how to add a module are in
 
 - Learning topics and the featured project (RudyPP itself) describe real work.
 - Journal entries are **sample content**, labeled `Sample` in the UI. Their ids and dates are in
-  `src/pages/learning/homeContent.ts` and their text in `learning.entries` of both dictionaries.
+  `src/pages/dashboard/learning/learningContent.ts` and their text in `learning.entries` of both dictionaries.
   No journal API exists.
 - The home page's headline and introduction are draft design copy, not confirmed biography. The
   English version of that copy is a translation written during integration; review both. Its
@@ -239,7 +242,8 @@ http://<host>:9333/api/actuator/health  Deploy health check (same URL as before)
 - **Routing**: the servlet context path `/api` was removed. `WebConfig` adds the `/api` prefix to
   every `@RestController`, and `management.endpoints.web.base-path` keeps actuator at
   `/api/actuator`. Security whitelists use the full `/api/...` paths.
-- **Static access**: `/`, `/index.html`, `/assets/**`, `/favicon.svg` and the client routes
+- **Static access**: `/`, `/index.html`, `/assets/**`, the favicons (`/favicon-32.png`,
+  `/favicon-192.png`, `/apple-touch-icon.png`) and the client routes
   `/login` and `/dashboard` are public. Anything else outside the whitelist still needs a token.
   `UiAccessTest` covers this.
 - **Build**: `frontend-maven-plugin` downloads Node `v24.19.0` (cached in `~/.m2`, unpacked to

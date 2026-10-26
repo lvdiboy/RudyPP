@@ -12,7 +12,6 @@ export const zh: Messages = {
   },
 
   nav: {
-    sectionsLabel: '页面分区',
     accountLabel: '账户',
     siteLabel: '网站',
     home: '首页',
@@ -328,7 +327,6 @@ export const zh: Messages = {
     edit: '编辑',
     delete: '删除',
     search: '搜索',
-    clearSearch: '清除搜索',
     required: '此项为必填。',
     tooLong: (max: number) => `请控制在 ${max} 个字符以内。`,
     counter: (count: number, max: number) => `${count} / ${max}`,
@@ -387,7 +385,6 @@ export const zh: Messages = {
     deleted: '收藏已删除。',
     deleteTitle: '删除这个收藏？',
     deleteMessage: (title: string) => `“${title}”将从此浏览器中删除。`,
-    openLabel: (title: string) => `${title}（在新标签页中打开）`,
     newTab: '在新标签页中打开',
     empty: '还没有收藏。添加一个想留下的链接吧。',
     noResults: (query: string) => `没有与“${query}”匹配的收藏。`,
@@ -410,8 +407,6 @@ export const zh: Messages = {
       done: '已完成',
     },
     summary: (open: number, done: number) => `${open} 项未完成 · ${done} 项已完成`,
-    markDone: '标记为完成',
-    reopen: '重新打开',
     statusDone: '已完成',
     statusOpen: '未完成',
     markedDone: (title: string) => `“${title}”已标记为完成。`,

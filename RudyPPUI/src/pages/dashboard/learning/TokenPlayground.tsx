@@ -1,5 +1,5 @@
 import { useState, type CSSProperties } from 'react';
-import { useI18n } from '../../i18n/useI18n.ts';
+import { useI18n } from '../../../i18n/useI18n.ts';
 import styles from './TokenPlayground.module.css';
 
 const accents = [

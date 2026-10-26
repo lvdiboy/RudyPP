@@ -5,15 +5,15 @@ import AuthLayout from '../layouts/AuthLayout.tsx';
 import DashboardLayout from '../layouts/DashboardLayout.tsx';
 import SiteLayout from '../layouts/SiteLayout.tsx';
 import AccountPage from '../pages/account/AccountPage.tsx';
-import BookmarksPage from '../pages/bookmarks/BookmarksPage.tsx';
+import BookmarksPage from '../pages/dashboard/bookmarks/BookmarksPage.tsx';
 import DashboardPage from '../pages/dashboard/DashboardPage.tsx';
 import WorkspaceNotFoundPage from '../pages/dashboard/WorkspaceNotFoundPage.tsx';
 import HomePage from '../pages/home/HomePage.tsx';
-import LearningPage from '../pages/learning/LearningPage.tsx';
+import LearningPage from '../pages/dashboard/learning/LearningPage.tsx';
 import LoginPage from '../pages/login/LoginPage.tsx';
-import NotesPage from '../pages/notes/NotesPage.tsx';
+import NotesPage from '../pages/dashboard/notes/NotesPage.tsx';
 import NotFoundPage from '../pages/not-found/NotFoundPage.tsx';
-import TasksPage from '../pages/tasks/TasksPage.tsx';
+import TasksPage from '../pages/dashboard/tasks/TasksPage.tsx';
 
 /*
  * URL map. When adding a route, also add it to UiRouteController and

@@ -1,11 +1,11 @@
 import { ExternalLink, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { useSearchParams } from 'react-router';
-import Alert from '../../components/ui/Alert/Alert.tsx';
-import Button from '../../components/ui/Button/Button.tsx';
-import ConfirmDialog from '../../components/ui/ConfirmDialog/ConfirmDialog.tsx';
-import TextArea from '../../components/ui/TextField/TextArea.tsx';
-import TextField from '../../components/ui/TextField/TextField.tsx';
+import Alert from '../../../components/ui/Alert/Alert.tsx';
+import Button from '../../../components/ui/Button/Button.tsx';
+import ConfirmDialog from '../../../components/ui/ConfirmDialog/ConfirmDialog.tsx';
+import TextArea from '../../../components/ui/TextField/TextArea.tsx';
+import TextField from '../../../components/ui/TextField/TextField.tsx';
 import {
   BOOKMARK_LIMITS,
   displayHost,
@@ -16,17 +16,17 @@ import {
   type BookmarkFieldProblem,
   type BookmarkInput,
   type BookmarkProblems,
-} from '../../features/bookmarks/bookmarks.ts';
-import Counter from '../../features/workspace/components/Counter.tsx';
-import StatusMessage from '../../features/workspace/components/StatusMessage.tsx';
-import StorageProblem from '../../features/workspace/components/StorageProblem.tsx';
-import tool from '../../features/workspace/components/tool.module.css';
-import WorkspacePage from '../../features/workspace/components/WorkspacePage.tsx';
-import { failureMessage } from '../../features/workspace/failureMessage.ts';
-import type { StorageFailure } from '../../features/workspace/storage.ts';
-import type { Messages } from '../../i18n/locales/en.ts';
-import { useI18n } from '../../i18n/useI18n.ts';
-import { matchesQuery } from '../../lib/text.ts';
+} from '../../../features/bookmarks/bookmarks.ts';
+import Counter from '../../../features/workspace/components/Counter.tsx';
+import StatusMessage from '../../../features/workspace/components/StatusMessage.tsx';
+import StorageProblem from '../../../features/workspace/components/StorageProblem.tsx';
+import tool from '../../../features/workspace/components/tool.module.css';
+import WorkspacePage from '../../../features/workspace/components/WorkspacePage.tsx';
+import { failureMessage } from '../../../features/workspace/failureMessage.ts';
+import type { StorageFailure } from '../../../features/workspace/storage.ts';
+import type { Messages } from '../../../i18n/locales/en.ts';
+import { useI18n } from '../../../i18n/useI18n.ts';
+import { matchesQuery } from '../../../lib/text.ts';
 import styles from './BookmarksPage.module.css';
 
 type Editor = {

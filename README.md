@@ -124,7 +124,7 @@ The tests use an H2 in-memory database in MySQL mode and an in-memory Redis fake
    JWT_SECRET_KEY=a-random-string-of-at-least-32-bytes
    ```
 
-4. **Run** the app, for example as a systemd service with `EnvironmentFile=/etc/rudypp/rudypp.env` and `ExecStart=/usr/bin/java -jar /opt/rudypp/rudypp.jar`.
+4. **Run** the app as the systemd service `rudypp.service` (user `rudypp`) with `EnvironmentFile=/etc/rudypp/rudypp.env` and `ExecStart=/usr/bin/java -jar /opt/rudypp/app/rudypp.jar`. CodeDeploy installs the jar at exactly that path (`appspec.yml`), and the deploy hooks stop and start this service. Do not set `SERVER_SERVLET_CONTEXT_PATH`.
 
 The `prod` profile turns off SQL logging. If any of the required `DB_*` variables is missing, the app refuses to start.
 
@@ -134,7 +134,7 @@ The [Jenkinsfile](./Jenkinsfile) defines the pipeline: **Checkout → Build → 
 
 - It builds with `./mvnw`, so the Jenkins agent only needs JDK 25. Maven downloads Node for the UI build (cached in `~/.m2`).
 - **Build** also builds the UI (`npm ci`, lint, type check, Vite build). **Test** and **Package** reuse that `RudyPPUI/dist`.
-- **Package** fails unless `target/rudypp.jar` contains `static/index.html` and every asset it loads, so a jar without the UI (or with a mismatched build) never reaches EC2.
+- **Package** fails unless `target/rudypp.jar` contains `static/index.html` and every local file it loads (hashed assets and favicons), so a jar without the UI (or with a mismatched build) never reaches EC2.
 - **Build agent needs**: JDK 25, `unzip`/`zip`, the AWS CLI, outbound HTTPS to nodejs.org (first build, then cached in `~/.m2`) and registry.npmjs.org, and glibc 2.28+ for Node 24 (Amazon Linux 2023: yes; Amazon Linux 2: no).
 - Tests need no Redis or MySQL.
 - A push to GitHub triggers a build; Deploy submits an AWS CodeDeploy deployment of the jar to the EC2 instance.

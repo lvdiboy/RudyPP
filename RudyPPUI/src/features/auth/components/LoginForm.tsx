@@ -7,7 +7,7 @@ import TextField from '../../../components/ui/TextField/TextField.tsx';
 import { errorMessage } from '../../../i18n/errorMessage.ts';
 import type { Messages } from '../../../i18n/locales/en.ts';
 import { useI18n } from '../../../i18n/useI18n.ts';
-import { ApiError } from '../../../lib/api-error.ts';
+import { ApiError } from '../../../lib/apiError.ts';
 import { useAuth } from '../useAuth.ts';
 import styles from './LoginForm.module.css';
 

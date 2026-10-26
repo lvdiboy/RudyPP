@@ -10,7 +10,7 @@ Boot, design tokens, a site layout and a responsive homepage.
 
 ### Concepts and where to find them
 
-**Components are functions.** `SiteFooter` in `src/components/SiteFooter.tsx` is a function that
+**Components are functions.** `SiteFooter` in `src/layouts/SiteFooter.tsx` is a function that
 returns markup (TSX). React calls it and puts the result on the page. Compare it with a Thymeleaf
 fragment, except that it is plain TypeScript.
 
@@ -61,8 +61,8 @@ disagreeing.
    `#b8f0a0`. Run `npm run dev` and note every place that changes: the first topic card's band,
    the primary button, the hero note, the nav hover and the playground swatch. Why do they all
    change?
-2. In `src/pages/home/homeContent.ts`, add a fourth entry to `learningTopics` with
-   `accent: 'pink'`. Without touching `HomePage.tsx`, a new card appears. Explain the path:
+2. In `src/pages/dashboard/learning/learningContent.ts`, add a fourth entry to `learningTopics` with
+   `accent: 'pink'`. Without touching `LearningPage.tsx`, a new card appears. Explain the path:
    array item → `map` → `<Card accent="pink">` → `styles.pink` → `--card-accent` → border color.
 3. Try `accent: 'blue'`. TypeScript rejects it. Read the error and find where `CardAccent` is
    defined.

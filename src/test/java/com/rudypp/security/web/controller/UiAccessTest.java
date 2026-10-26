@@ -32,6 +32,14 @@ public class UiAccessTest extends BaseTest {
     }
 
     @Test
+    public void should_not_require_token_for_favicons() throws Exception {
+        for (String icon : new String[] {"/favicon-32.png", "/favicon-192.png", "/apple-touch-icon.png"}) {
+            this.mockMvc.perform(get(icon))
+                    .andExpect(result -> assertNotEquals(401, result.getResponse().getStatus()));
+        }
+    }
+
+    @Test
     public void should_forward_ui_routes_to_index_without_token() throws Exception {
         // Opening or refreshing a client-side route must load the React app, not a 401 or 404
         for (String route : new String[]{"/login", "/dashboard", "/dashboard/learning", "/dashboard/notes",

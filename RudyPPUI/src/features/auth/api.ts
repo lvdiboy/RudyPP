@@ -1,4 +1,4 @@
-import { ApiError } from '../../lib/api-error.ts';
+import { ApiError } from '../../lib/apiError.ts';
 import { request } from '../../lib/http.ts';
 import type { LoginRequest } from './types.ts';
 

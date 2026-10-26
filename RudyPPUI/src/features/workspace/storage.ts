@@ -1,5 +1,5 @@
 import type { Session } from '../auth/types.ts';
-import { readJson, removeKey, writeJson } from '../../lib/browser-storage.ts';
+import { readJson, removeKey, writeJson } from '../../lib/browserStorage.ts';
 
 /*
  * Browser-local storage for workspace modules (notes, bookmarks, to-dos, sidebar preference).

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Link } from 'react-router';
-import LanguageToggle from './LanguageToggle.tsx';
+import LanguageToggle from '../components/LanguageToggle.tsx';
 import styles from './SiteHeader.module.css';
 
 type SiteHeaderProps = {

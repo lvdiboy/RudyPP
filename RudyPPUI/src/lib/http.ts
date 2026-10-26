@@ -1,4 +1,4 @@
-import { ApiError, networkError } from './api-error.ts';
+import { ApiError, networkError } from './apiError.ts';
 
 // Relative on purpose: Vite proxies /api in development, Spring Boot serves it in production.
 const API_BASE = '/api';

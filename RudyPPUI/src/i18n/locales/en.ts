@@ -14,7 +14,6 @@ export const en = {
   },
 
   nav: {
-    sectionsLabel: 'Sections',
     accountLabel: 'Account',
     siteLabel: 'Site',
     home: 'Home',
@@ -335,7 +334,7 @@ export const en = {
       localNotice:
         'Notes, bookmarks and to-dos are saved only in this browser for now. They are not synced to other devices or backed up on a server.',
     },
-    // Errors from the browser-storage layer, shared by all local modules
+    // Errors from the browser storage layer, shared by all local modules
     storage: {
       corrupt:
         'The saved data for this section can’t be read, so nothing was changed. You can reset this section to start again.',
@@ -356,7 +355,6 @@ export const en = {
     edit: 'Edit',
     delete: 'Delete',
     search: 'Search',
-    clearSearch: 'Clear search',
     required: 'This field is required.',
     tooLong: (max: number) => `Keep this to ${max} characters or fewer.`,
     counter: (count: number, max: number) => `${count} / ${max}`,
@@ -416,7 +414,6 @@ export const en = {
     deleted: 'Bookmark deleted.',
     deleteTitle: 'Delete this bookmark?',
     deleteMessage: (title: string) => `“${title}” will be removed from this browser.`,
-    openLabel: (title: string) => `${title} (opens in a new tab)`,
     newTab: 'Opens in a new tab',
     empty: 'No bookmarks yet. Add a link you want to keep.',
     noResults: (query: string) => `No bookmarks match “${query}”.`,
@@ -439,8 +436,6 @@ export const en = {
       done: 'Done',
     },
     summary: (open: number, done: number) => `${open} open · ${done} done`,
-    markDone: 'Mark as done',
-    reopen: 'Reopen',
     statusDone: 'Done',
     statusOpen: 'Open',
     markedDone: (title: string) => `“${title}” marked as done.`,

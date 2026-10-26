@@ -9,7 +9,7 @@ import { WORKSPACE_MODULES } from '../features/workspace/modules.ts';
 import { workspaceKey } from '../features/workspace/storage.ts';
 import { useWorkspaceNamespace } from '../features/workspace/useWorkspaceNamespace.ts';
 import { useI18n } from '../i18n/useI18n.ts';
-import { readJson, writeJson } from '../lib/browser-storage.ts';
+import { readJson, writeJson } from '../lib/browserStorage.ts';
 import styles from './DashboardLayout.module.css';
 
 // Matches the CSS breakpoint where the sidebar turns into a drawer
