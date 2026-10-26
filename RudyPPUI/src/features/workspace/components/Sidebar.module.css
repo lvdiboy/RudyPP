@@ -1,0 +1,169 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-height: 100%;
+  padding: 20px 12px 16px;
+}
+
+.brandRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 6px;
+}
+
+.brand {
+  display: grid;
+  gap: 6px;
+  color: inherit;
+  font-size: 28px;
+  font-weight: 850;
+  letter-spacing: -1px;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.brandSub {
+  color: var(--workspace-muted);
+  font-size: 9px;
+  font-weight: 650;
+  letter-spacing: 2px;
+}
+
+.iconButton {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.iconButton:hover {
+  border-color: var(--workspace-line);
+  background: var(--workspace-sea);
+}
+
+.nav {
+  display: grid;
+  gap: 16px;
+}
+
+.group {
+  display: grid;
+  gap: 4px;
+}
+
+.groupLabel {
+  padding: 0 10px;
+  color: var(--workspace-muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.list {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.link,
+.planned {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  padding: 0 10px;
+  border-radius: 8px;
+  color: inherit;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.link:hover {
+  background: var(--workspace-sea);
+}
+
+/* Current page: filled pill plus bold text, so it doesn't rely on color alone */
+.active,
+.active:hover {
+  background: var(--workspace-ink);
+  color: var(--workspace-surface);
+  font-weight: 700;
+}
+
+.planned {
+  color: var(--workspace-muted);
+  cursor: default;
+}
+
+.badge {
+  margin-left: auto;
+  padding: 1px 8px;
+  border: 1px dashed currentcolor;
+  border-radius: 999px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.footer {
+  display: grid;
+  gap: 2px;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--workspace-line);
+}
+
+.localNote {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px 0;
+  color: var(--workspace-muted);
+  font-size: 12px;
+}
+
+/* ---------- Collapsed (desktop icon mode) ---------- */
+
+.collapsed .brandRow {
+  flex-direction: column;
+  padding: 0;
+}
+
+.collapsed .brand {
+  justify-items: center;
+}
+
+.collapsed .brandSub,
+.collapsed .label,
+.collapsed .badge,
+.collapsed .groupLabel {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.collapsed .link,
+.collapsed .planned,
+.collapsed .localNote {
+  justify-content: center;
+  padding: 0;
+}
+
+.collapsed .group + .group,
+.collapsed .group {
+  padding-top: 8px;
+  border-top: 1px solid var(--workspace-line);
+}

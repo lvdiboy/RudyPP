@@ -1,0 +1,60 @@
+.field {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.label {
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.control {
+  display: flex;
+  align-items: center;
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+
+/* Focus ring on the whole control, so an end button sits inside it */
+.control:focus-within {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.invalid {
+  border-color: var(--color-pink-strong);
+  border-width: 3px;
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  min-height: 2.75rem;
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.input:focus-visible {
+  outline: none;
+}
+
+.error {
+  color: var(--color-pink-strong);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.hint {
+  color: var(--color-ink-muted);
+  font-size: var(--text-sm);
+}
+
+/* Multi-line variant used by TextArea */
+.textarea {
+  resize: vertical;
+  min-height: 8rem;
+  line-height: var(--leading-body);
+}

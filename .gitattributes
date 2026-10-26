@@ -4,6 +4,23 @@ mvnw text eol=lf
 Jenkinsfile text eol=lf
 # Windows scripts
 *.cmd text eol=crlf
+# Front end: Prettier (format:check) expects LF, so keep LF in every checkout, Windows included
+RudyPPUI/**/*.ts text eol=lf
+RudyPPUI/**/*.tsx text eol=lf
+RudyPPUI/**/*.js text eol=lf
+RudyPPUI/**/*.css text eol=lf
+RudyPPUI/**/*.json text eol=lf
+RudyPPUI/**/*.html text eol=lf
+RudyPPUI/**/*.md text eol=lf
+RudyPPUI/**/*.svg text eol=lf
+RudyPPUI/.prettierignore text eol=lf
 # Binary files
 *.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
 *.jar binary

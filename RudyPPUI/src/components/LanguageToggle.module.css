@@ -1,0 +1,39 @@
+/* Neutral outline pill so it sits in both the lab header and the ocean header.
+   A page can recolor it through --toggle-border and --toggle-hover. */
+.toggle {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem;
+  min-height: 2.5rem;
+  padding: 0 12px;
+  border: 1px solid var(--toggle-border, currentcolor);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.toggle:hover {
+  background: var(--toggle-hover, rgb(0 0 0 / 6%));
+}
+
+.icon {
+  flex: none;
+}
+
+/* Narrow screens: text only, to leave room for Log in / the user menu */
+@media (max-width: 30rem) {
+  .icon {
+    display: none;
+  }
+
+  .toggle {
+    padding: 0 10px;
+  }
+}

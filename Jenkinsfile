@@ -1,5 +1,6 @@
 // CI pipeline for RudyPP, running on the Jenkins server on AWS EC2.
 // Builds with the Maven Wrapper (./mvnw), so the agent only needs JDK 25; no Maven installation is required.
+// The React UI (RudyPPUI/) is built by Maven too: it downloads Node into target/node (cached in ~/.m2), so no Node install either.
 // Requires this Pipeline job SCM to be fixed to */develop. Submit deployment without waiting.
 pipeline {
     agent any
@@ -23,6 +24,8 @@ pipeline {
         MAVEN_OPTS = '-Xms128m -Xmx512m'
         // Batch mode, no download progress noise in the console log
         MVN = './mvnw -B -ntp'
+        // Reuse the RudyPPUI/dist built in the Build stage instead of running npm again
+        SKIP_UI_BUILD = '-Dskip.installnodenpm -Dskip.npm'
         AWS_DEFAULT_REGION = 'us-west-2'
         AWS_PAGER = ''
         S3_BUCKET = 'rudypp-cicd-artifacts-322473970370-us-west-2-an'
@@ -38,6 +41,9 @@ pipeline {
 
         stage('Build') {
             steps {
+                // Also builds the UI: npm ci, lint, type check and production build into RudyPPUI/dist.
+                // Needs outbound HTTPS to nodejs.org (first build only, then cached in ~/.m2) and registry.npmjs.org,
+                // and glibc 2.28+ on the agent for Node 24 (Amazon Linux 2023 yes, Amazon Linux 2 no).
                 sh "${MVN} clean compile"
             }
         }
@@ -45,7 +51,7 @@ pipeline {
         stage('Test') {
             steps {
                 // Tests need no Redis or MySQL: in-memory H2 and an in-memory Redis fake (see src/test/resources/application.properties)
-                sh "${MVN} test"
+                sh "${MVN} test ${SKIP_UI_BUILD}"
             }
             post {
                 always {
@@ -56,8 +62,23 @@ pipeline {
 
         stage('Package') {
             steps {
-                // Tests already ran in the Test stage
-                sh "${MVN} package -DskipTests"
+                // Tests already ran in the Test stage; the UI from the Build stage is copied into the jar
+                sh "${MVN} package -DskipTests ${SKIP_UI_BUILD}"
+                // Fail here, not on EC2, if the jar was packaged without the UI or with a mismatched build:
+                // index.html must be there, and so must every local file it loads (hashed assets and favicons)
+                sh '''
+                    set -eu
+                    unzip -p target/rudypp.jar BOOT-INF/classes/static/index.html > target/ui-index.html
+                    files=$(grep -oE '(src|href)="/[^"/][^"]*"' target/ui-index.html | sed -E 's/^(src|href)="\\///; s/"$//' | sort -u)
+                    echo "$files" | grep -q '^assets/'
+                    for file in $files; do
+                        if ! unzip -l target/rudypp.jar "BOOT-INF/classes/static/$file" > /dev/null; then
+                            echo "Missing from the jar: static/$file (referenced by index.html)"
+                            exit 1
+                        fi
+                    done
+                    echo "UI in jar: index.html and the $(echo "$files" | wc -l) file(s) it loads are present"
+                '''
                 archiveArtifacts artifacts: 'target/rudypp.jar', fingerprint: true
             }
         }

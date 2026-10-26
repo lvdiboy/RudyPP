@@ -1,6 +1,6 @@
 # RudyPP
 
-A demo project for **stateless JWT authentication and role-based authorization** with Spring Boot and Spring Security. It covers sign-up, login, logout, token revocation through Redis, method-level permission checks and JPA auditing, and it comes with a simple login page.
+A demo project for **stateless JWT authentication and role-based authorization** with Spring Boot and Spring Security. It covers sign-up, login, logout, token revocation through Redis, method-level permission checks and JPA auditing. A React front end ([RudyPPUI](./RudyPPUI)) is built into the same jar.
 
 ## Tech Stack
 
@@ -12,6 +12,7 @@ A demo project for **stateless JWT authentication and role-based authorization**
 | Persistence | Spring Data JPA, MySQL 8 (H2 for tests) |
 | Cache       | Redis (Lettuce + commons-pool2)         |
 | Other       | Lombok, Guava, Bean Validation          |
+| Front end   | React, TypeScript, Vite (in `RudyPPUI/`) |
 | Build       | Maven (wrapper), Jenkins                |
 
 ## Features
@@ -22,7 +23,7 @@ A demo project for **stateless JWT authentication and role-based authorization**
 - **Roles**: `USER`, `TEMP_USER`, `MANAGER` and `ADMIN`. Users and roles are linked through a `user_role` join table, and endpoints are protected with `@PreAuthorize`.
 - **JPA auditing**: entities record who created or changed them, and when (`AbstractAuditBase`).
 - **Unified errors**: a global exception handler returns error responses in one consistent format.
-- **Login page**: a static login, sign-up and home page served by the app.
+- **Web UI**: the React app in `RudyPPUI/` is served at `/`; all APIs are under `/api`.
 
 ## Project Structure
 
@@ -37,8 +38,8 @@ src/main/java/com/rudypp
     └── web                  # /users endpoints
 src/main/resources
 ├── application.yaml         # Shared settings + local MySQL/Redis defaults
-├── application-prod.yaml    # Production (EC2) overrides, all secrets from env vars
-└── static/                  # Login & home pages (HTML/CSS/JS)
+└── application-prod.yaml    # Production (EC2) overrides, all secrets from env vars
+RudyPPUI/                    # React front end; Maven copies its build into the jar's static/
 scripts/mysql-init.sql       # Creates the database, app user, tables and initial data
 ```
 
@@ -67,7 +68,9 @@ This creates the `rudypp` database and a `rudypp` / `rudypp` user, which match t
 ./mvnw spring-boot:run
 ```
 
-The app starts at **http://localhost:9333/api/**. Open it in your browser to use the login page.
+The APIs start at **http://localhost:9333/api/** (health: `/api/actuator/health`). The web UI is at **http://localhost:9333/** once a Maven build (`compile` or later) has built it into `target/classes/static`. During UI development, use the Vite dev server instead: see [RudyPPUI/README.md](./RudyPPUI/README.md).
+
+Maven builds the UI on every `compile`, `test` and `package` (it downloads Node into `target/node` the first time). For backend-only builds, add `-Dskip.installnodenpm -Dskip.npm`; an existing `RudyPPUI/dist` is still copied into the jar.
 
 In VS Code, you can use the **RudyPPApplication** launch configuration in `.vscode/launch.json`. Its environment variables override `application.yaml`.
 
@@ -102,7 +105,7 @@ All database settings can be overridden with environment variables:
 ./mvnw test
 ```
 
-The tests use an H2 in-memory database in MySQL mode, so they don't need MySQL. Some tests need Redis to be running.
+The tests use an H2 in-memory database in MySQL mode and an in-memory Redis fake, so they need neither MySQL nor Redis.
 
 ## Deploying to AWS EC2
 
@@ -121,32 +124,25 @@ The tests use an H2 in-memory database in MySQL mode, so they don't need MySQL. 
    JWT_SECRET_KEY=a-random-string-of-at-least-32-bytes
    ```
 
-4. **Run** the app, for example as a systemd service with `EnvironmentFile=/etc/rudypp/rudypp.env` and `ExecStart=/usr/bin/java -jar /opt/rudypp/rudypp.jar`.
+4. **Run** the app as the systemd service `rudypp.service` (user `rudypp`) with `EnvironmentFile=/etc/rudypp/rudypp.env` and `ExecStart=/usr/bin/java -jar /opt/rudypp/app/rudypp.jar`. CodeDeploy installs the jar at exactly that path (`appspec.yml`), and the deploy hooks stop and start this service. Do not set `SERVER_SERVLET_CONTEXT_PATH`.
 
 The `prod` profile turns off SQL logging. If any of the required `DB_*` variables is missing, the app refuses to start.
 
 ## CI (Jenkins)
 
-The [Jenkinsfile](./Jenkinsfile) defines the pipeline: **Checkout → Build → Test → Package → Deploy**.
+The [Jenkinsfile](./Jenkinsfile) defines the pipeline: **Checkout → Build → Test → Package → CodeDeploy ZIP → Upload to S3 → Deploy**.
 
-- It builds with `./mvnw`, so the Jenkins agent only needs JDK 25.
-- The packaged `target/rudypp.jar` is archived with each build.
-- Tests are skipped by default (`SKIP_TESTS` = true) because the Test stage needs Redis on the agent. Untick it, or change the default, once Redis is installed.
-- New commits on `develop` trigger a build automatically: Jenkins polls GitHub every ~5 minutes.
-- Deploy runs only for the `develop` branch, in a Multibranch Pipeline job, and is still a placeholder.
-
-## CI (Jenkins)
-
-The [Jenkinsfile](./Jenkinsfile) defines the pipeline: **Checkout → Build → Test → Package → Deploy**.
-
-- It builds with `./mvnw`, so the Jenkins agent only needs JDK 25.
-- The packaged `target/rudypp.jar` is archived with each build.
-- The Test stage needs Redis on the agent. Without it, run the job with the `SKIP_TESTS` parameter.
-- Deploy runs only for the `develop` branch, in a Multibranch Pipeline job, and is still a placeholder.
+- It builds with `./mvnw`, so the Jenkins agent only needs JDK 25. Maven downloads Node for the UI build (cached in `~/.m2`).
+- **Build** also builds the UI (`npm ci`, lint, type check, Vite build). **Test** and **Package** reuse that `RudyPPUI/dist`.
+- **Package** fails unless `target/rudypp.jar` contains `static/index.html` and every local file it loads (hashed assets and favicons), so a jar without the UI (or with a mismatched build) never reaches EC2.
+- **Build agent needs**: JDK 25, `unzip`/`zip`, the AWS CLI, outbound HTTPS to nodejs.org (first build, then cached in `~/.m2`) and registry.npmjs.org, and glibc 2.28+ for Node 24 (Amazon Linux 2023: yes; Amazon Linux 2: no).
+- Tests need no Redis or MySQL.
+- A push to GitHub triggers a build; Deploy submits an AWS CodeDeploy deployment of the jar to the EC2 instance.
+- On EC2, CodeDeploy's ValidateService hook (`deploy/validate.sh`) passes only if `/api/actuator/health` is UP **and** `/` and `/dashboard` return the React app. If health only answers on `/api/api/...`, it prints a hint about a leftover `SERVER_SERVLET_CONTEXT_PATH`.
 
 ## API
 
-All paths are relative to `http://localhost:9333/api`.
+All paths are relative to `http://localhost:9333/api`. The web UI is at `http://localhost:9333/`. The full reference, with request rules, response shapes and error codes, is in [docs/api.md](./docs/api.md).
 
 | Method   | Path                  | Access                     | Description                                 |
 | -------- | --------------------- | -------------------------- | ------------------------------------------- |

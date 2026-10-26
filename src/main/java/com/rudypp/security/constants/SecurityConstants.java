@@ -1,5 +1,7 @@
 package com.rudypp.security.constants;
 
+import com.rudypp.system.config.WebConfig;
+
 /**
  * @author Rudy Lyu
  * @description Spring Security constants
@@ -32,28 +34,37 @@ public final class SecurityConstants {
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String TOKEN_TYPE = "JWT";
 
-    // Page to go to after a successful login (relative to the context path)
-    public static final String HOME_PAGE = "/home.html";
+    // Page to go to after a successful login: the React UI's home page
+    public static final String HOME_PAGE = "/";
 
-    // Static resources such as the login page are public (home.html checks the token in the browser)
+    // The React UI is public: index.html at /, hashed JS/CSS under /assets, files from RudyPPUI/public,
+    // and the client routes UiRouteController forwards to index.html (the pages themselves check the login)
     public static final String[] STATIC_WHITELIST = {
-            "/",
-            "/index.html",
             HOME_PAGE,
-            "/css/**",
-            "/js/**"
+            "/index.html",
+            "/assets/**",
+            "/favicon-32.png",
+            "/favicon-192.png",
+            "/apple-touch-icon.png",
+            "/login",
+            "/dashboard",
+            "/dashboard/learning",
+            "/dashboard/notes",
+            "/dashboard/bookmarks",
+            "/dashboard/tasks",
+            "/account"
     };
 
     // Health check for the deploy script and load balancers (only health is exposed, see management.* in application.yaml)
     public static final String[] ACTUATOR_WHITELIST = {
-            "/actuator/health",
-            "/actuator/health/**"
+            WebConfig.API_PREFIX + "/actuator/health",
+            WebConfig.API_PREFIX + "/actuator/health/**"
     };
 
     // System WHITELIST
     public static final String[] SYSTEM_WHITELIST = {
-            "/auth/login",
-            "/users/sign-up"
+            WebConfig.API_PREFIX + "/auth/login",
+            WebConfig.API_PREFIX + "/users/sign-up"
     };
 
     private SecurityConstants() {

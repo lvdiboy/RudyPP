@@ -1,0 +1,56 @@
+.header {
+  position: relative;
+  z-index: 10;
+  border-bottom: var(--border-width) solid var(--color-ink);
+  background: var(--color-surface);
+}
+
+/* Wordmark left, actions pinned top-right; the nav wraps under them on narrow screens */
+.inner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    'brand actions'
+    'nav nav';
+  align-items: center;
+  gap: var(--space-2) var(--space-5);
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding: var(--space-3) var(--gutter);
+}
+
+@media (min-width: 52rem) {
+  .inner {
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: 'brand nav actions';
+  }
+}
+
+.wordmark {
+  grid-area: brand;
+  justify-self: start;
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+.nav {
+  grid-area: nav;
+  justify-self: end;
+}
+
+@media (max-width: 51.99rem) {
+  .nav {
+    justify-self: start;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  grid-area: actions;
+  justify-self: end;
+}

@@ -1,0 +1,31 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    "version": "2.0.0",
+    "tasks": [
+        {
+            // Runs `npm run dev` in RudyPPUI/. It keeps running in its own terminal after the
+            // debugger stops; end it from the terminal panel (trash icon) or with Ctrl+C.
+            // A plain shell task on purpose: an "npm"-type task needs VS Code's npm extension to
+            // resolve it first, and when that hasn't happened the launch fails with
+            // "Could not find the task 'RudyPPUI: dev server'".
+            "label": "RudyPPUI: dev server",
+            "type": "shell",
+            "command": "npm run dev",
+            "options": {
+                "cwd": "${workspaceFolder}/RudyPPUI"
+            },
+            "isBackground": true,
+            // Tells VS Code when the server is ready, so the launches wait for it
+            "problemMatcher": {
+                "owner": "vite",
+                "pattern": { "regexp": "^__never_matches__$" },
+                "background": {
+                    // npm echoes "> vite" when the script starts
+                    "beginsPattern": "vite",
+                    // Vite's ready line: "Local: http://localhost:5173/"
+                    "endsPattern": "http://localhost:"
+                }
+            }
+        }
+    ]
+}

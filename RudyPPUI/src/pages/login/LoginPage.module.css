@@ -1,0 +1,83 @@
+/* Split screen: a graph-paper pitch on the left, the form card on the right; stacked on phones */
+.page {
+  display: grid;
+  gap: var(--space-6);
+  align-items: center;
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding: var(--space-7) var(--gutter) var(--space-8);
+}
+
+@media (min-width: 52rem) {
+  .page {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 26rem);
+    gap: var(--space-8);
+    min-height: calc(100vh - 12rem);
+  }
+}
+
+.brand {
+  position: relative;
+  padding: var(--space-6);
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-paper);
+  background-image:
+    linear-gradient(var(--color-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.pitch {
+  max-width: 12ch;
+  font-size: clamp(2rem, 1.4rem + 3vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.pitchText {
+  max-width: 40ch;
+  margin-top: var(--space-4);
+  color: var(--color-ink-muted);
+  font-size: var(--text-lg);
+}
+
+.stamp {
+  position: absolute;
+  right: var(--space-5);
+  bottom: calc(-1 * var(--space-4));
+  padding: var(--space-1) var(--space-4);
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-sm);
+  background: var(--color-pink);
+  box-shadow: 3px 3px 0 var(--color-ink);
+  font-family: var(--font-display);
+  font-weight: 800;
+  transform: rotate(-6deg);
+}
+
+/* On phones the form comes first; the pitch is a nice-to-have below it */
+@media (max-width: 51.99rem) {
+  .card {
+    order: -1;
+  }
+}
+
+.card {
+  padding: var(--space-6) var(--space-5);
+  border: var(--border-width) solid var(--color-ink);
+  border-top: 12px solid var(--color-highlight);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sticker);
+}
+
+.cardTitle {
+  font-size: var(--text-2xl);
+  font-weight: 800;
+}
+
+.cardIntro {
+  margin: var(--space-1) 0 var(--space-5);
+  color: var(--color-ink-muted);
+}

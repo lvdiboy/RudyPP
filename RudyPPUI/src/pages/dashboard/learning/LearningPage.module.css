@@ -1,0 +1,329 @@
+/* The learning module keeps its lab look; its sections sit on the lab paper color */
+.lab {
+  min-height: 100%;
+  padding-bottom: var(--space-2);
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+/* ---------- Hero: graph paper, big headline, tilted note ---------- */
+
+.hero {
+  border-bottom: var(--border-width) solid var(--color-ink);
+  background-color: var(--color-paper);
+  background-image:
+    linear-gradient(var(--color-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.heroInner {
+  display: grid;
+  gap: var(--space-7);
+  align-items: center;
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding: var(--space-7) var(--gutter) var(--space-8);
+}
+
+@media (min-width: 52rem) {
+  .heroInner {
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    padding-block: var(--space-8);
+  }
+}
+
+.heroTitle {
+  max-width: 14ch;
+  font-size: var(--text-hero);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.lead {
+  max-width: 52ch;
+  margin-top: var(--space-5);
+  font-size: var(--text-lg);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+
+/* A pinboard: the note in the middle, code stickers stuck around its edges */
+.board {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 26rem);
+  padding: var(--space-7) var(--space-4);
+}
+
+@media (min-width: 52rem) {
+  .board {
+    justify-self: end;
+  }
+}
+
+.note {
+  position: relative;
+  z-index: 1;
+  padding: var(--space-5);
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-sm);
+  background: var(--color-highlight);
+  box-shadow: var(--shadow-sticker);
+  transform: rotate(-2deg);
+}
+
+.sticker {
+  position: absolute;
+  z-index: 2;
+  padding: var(--space-1) var(--space-3);
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-sm);
+  box-shadow: 3px 3px 0 var(--color-ink);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 800;
+  white-space: nowrap;
+  transform: rotate(var(--tilt));
+}
+
+.stickerTsx {
+  --tilt: -8deg;
+  top: var(--space-2);
+  left: 0;
+  background: var(--color-pink);
+}
+
+.stickerState {
+  --tilt: 6deg;
+  top: 0;
+  right: var(--space-2);
+  background: var(--color-teal);
+}
+
+.stickerToken {
+  --tilt: 4deg;
+  bottom: var(--space-3);
+  left: var(--space-5);
+  background: var(--color-surface);
+}
+
+.stickerJwt {
+  --tilt: -5deg;
+  right: 0;
+  bottom: var(--space-1);
+  background: var(--color-highlight);
+}
+
+/* The stickers bob gently out of step with each other */
+@media (prefers-reduced-motion: no-preference) {
+  .sticker {
+    animation: bob 5s ease-in-out infinite;
+  }
+
+  .stickerState {
+    animation-delay: -1.2s;
+    animation-duration: 6s;
+  }
+
+  .stickerToken {
+    animation-delay: -2.6s;
+    animation-duration: 5.5s;
+  }
+
+  .stickerJwt {
+    animation-delay: -0.6s;
+    animation-duration: 6.5s;
+  }
+}
+
+@keyframes bob {
+  50% {
+    transform: translateY(-7px) rotate(calc(var(--tilt) * -0.6));
+  }
+}
+
+/* The page's one entrance moment: the note settles onto the page */
+@media (prefers-reduced-motion: no-preference) {
+  .note {
+    animation: settle 500ms cubic-bezier(0.2, 0.9, 0.3, 1.2) 150ms both;
+  }
+}
+
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) rotate(4deg);
+  }
+}
+
+.noteTitle {
+  font-size: var(--text-xl);
+}
+
+.noteMilestone {
+  margin-top: var(--space-2);
+  font-weight: 700;
+}
+
+.checklist {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  padding: 0;
+  list-style: none;
+}
+
+/* Badge and text side by side, so wrapped text lines up under itself */
+.checklist li {
+  display: flex;
+  gap: var(--space-2);
+  align-items: baseline;
+}
+
+.status {
+  flex: none;
+  min-width: 3.25rem;
+  padding: 0 var(--space-2);
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  text-align: center;
+}
+
+.statusNext {
+  border-style: dashed;
+  background: transparent;
+}
+
+/* ---------- Shared section frame ---------- */
+
+.section {
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding: var(--space-8) var(--gutter) 0;
+  scroll-margin-top: var(--space-4);
+}
+
+.section:last-child {
+  padding-bottom: var(--space-8);
+}
+
+.sectionTitle {
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.sectionIntro {
+  max-width: var(--measure);
+  margin-top: var(--space-3);
+  color: var(--color-ink-muted);
+}
+
+/* ---------- Learning topics ---------- */
+
+.topicGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: var(--space-5);
+  margin-top: var(--space-5);
+  padding: 0;
+  list-style: none;
+}
+
+.cardTitle {
+  margin-bottom: var(--space-2);
+  font-size: var(--text-lg);
+}
+
+/* ---------- Journal ---------- */
+
+.journal {
+  max-width: 48rem;
+  margin-top: var(--space-5);
+  padding: 0;
+  list-style: none;
+}
+
+.entry {
+  padding-block: var(--space-5);
+  border-bottom: 1px solid var(--color-grid);
+}
+
+.journal li:first-child .entry {
+  border-top: 1px solid var(--color-grid);
+}
+
+.entryMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  color: var(--color-ink-muted);
+  font-size: var(--text-sm);
+}
+
+.sampleTag {
+  padding: 0 var(--space-2);
+  border: 1px dashed var(--color-ink-muted);
+  border-radius: var(--radius-sm);
+}
+
+.entryTitle {
+  margin-top: var(--space-2);
+  font-size: var(--text-xl);
+}
+
+.entryExcerpt {
+  max-width: var(--measure);
+  margin-top: var(--space-2);
+}
+
+/* ---------- Featured project ---------- */
+
+.project {
+  margin-top: var(--space-5);
+  padding: var(--space-6) var(--gutter);
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-lg);
+  background: var(--color-ink);
+  color: var(--color-surface);
+}
+
+.projectName {
+  font-size: clamp(var(--text-2xl), 1rem + 4vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.projectSummary {
+  max-width: var(--measure);
+  margin-top: var(--space-3);
+  font-size: var(--text-lg);
+}
+
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+  padding: 0;
+  list-style: none;
+}
+
+.stack li {
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--color-teal);
+  color: var(--color-ink);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}

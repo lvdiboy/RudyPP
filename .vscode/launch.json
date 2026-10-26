@@ -13,15 +13,22 @@
             "mainClass": "com.rudypp.RudyPPApplication",
             "projectName": "rudypp",
             "cwd": "${workspaceFolder}",
+            // Also starts the React UI (Vite on http://localhost:5173) before the backend.
+            // If the UI server is already running, VS Code reuses it. It keeps running after the
+            // backend stops; end it from its terminal panel (trash icon).
+            "preLaunchTask": "RudyPPUI: dev server",
             // JVM options, e.g. "-Xmx512m -Dfile.encoding=UTF-8"
             "vmArgs": "",
             // Program arguments, e.g. "--debug"
             "args": "",
+            // Start a fresh process each time; logs go to the Debug Console. The default ("integratedTerminal")
+            // reuses one terminal across launches, and variables removed from "env" below stay set there
+            // (that is how a stale SERVER_SERVLET_CONTEXT_PATH=/api turned every URL into /api/api/...).
+            "console": "internalConsole",
             "env": {
                 // Comma-separated Spring profiles; empty = default
                 "SPRING_PROFILES_ACTIVE": "",
                 "SERVER_PORT": "9333",
-                "SERVER_SERVLET_CONTEXT_PATH": "/api",
                 // Local MySQL; the database is created on first start if it doesn't exist
                 "DB_HOST": "localhost",
                 "DB_PORT": "3306",
@@ -34,6 +41,28 @@
                 // Empty = no password (ignored by Spring when blank)
                 "SPRING_DATA_REDIS_PASSWORD": ""
             }
+        },
+        {
+            // Opens Chrome with the debugger attached, so breakpoints in RudyPPUI/src/*.tsx work in VS Code.
+            // The preLaunchTask (.vscode/tasks.json) starts the Vite dev server first and waits until it is ready;
+            // the server keeps running in its own terminal when debugging stops.
+            // Vite proxies /api to the backend on 9333 (see RudyPPUI/vite.config.ts).
+            // Run `npm ci` in RudyPPUI once before the first launch.
+            "type": "chrome",
+            "name": "RudyPPUI",
+            "request": "launch",
+            "url": "http://localhost:5173",
+            "webRoot": "${workspaceFolder}/RudyPPUI",
+            "preLaunchTask": "RudyPPUI: dev server"
+        }
+    ],
+    "compounds": [
+        {
+            // Backend, UI server and a Chrome window with the debugger attached, for breakpoints in .tsx files.
+            // Both configurations share the same dev-server task, which starts only once.
+            "name": "RudyPP Full Stack",
+            "configurations": ["RudyPPApplication", "RudyPPUI"],
+            "stopAll": true
         }
     ]
 }

@@ -1,0 +1,857 @@
+.page {
+  --ink: #16383c;
+  --muted: #516b6a;
+  --paper: #f7f8f3;
+  --blue: #e4f0ed;
+  --look-x: 0px;
+  --look-y: 0px;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: Inter, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.page *,
+.page *::before,
+.page *::after {
+  box-sizing: border-box;
+}
+.page h1,
+.page h2,
+.page h3,
+.page p {
+  margin: 0;
+}
+/* RudyPPUI's global.css gives h1–h3 the display font, a tight line-height and balanced wrapping.
+   This page has its own type, so undo that here only; the rules below set per-heading values. */
+.page h1,
+.page h2,
+.page h3 {
+  font-family: inherit;
+  line-height: normal;
+  text-wrap: wrap;
+}
+.page a {
+  color: inherit;
+  text-decoration: none;
+}
+.page button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+/* Only this page's arrows; a bare ".page svg" would also resize icons in the login panel */
+.arrow {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+.page a:focus-visible,
+.page button:focus-visible {
+  outline: 3px solid #b35416;
+  outline-offset: 5px;
+}
+.page section[id] {
+  scroll-margin-top: 24px;
+}
+.page main:focus {
+  outline: none;
+}
+.skip {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  transform: translateY(-200%);
+  padding: 12px 20px;
+  background: white;
+  z-index: 20;
+}
+.skip:focus {
+  transform: none;
+}
+.header {
+  height: 94px;
+  padding: 0 4.3%;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  background: var(--paper);
+}
+.brand {
+  font-size: 36px;
+  font-weight: 850;
+  letter-spacing: -2px;
+  line-height: 1;
+}
+.brand span {
+  font-size: 12px;
+  vertical-align: top;
+  margin: 4px 0 0 5px;
+  display: inline-block;
+  letter-spacing: 0;
+}
+.headerNote {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  border-left: 1px solid #c9d1ca;
+  padding-left: 28px;
+}
+.nav {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 35px;
+  font-size: 13px;
+}
+.nav a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.nav a:hover {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+.nav a > span {
+  font-size: 9px;
+  opacity: 0.6;
+  align-self: flex-start;
+}
+.nav .navCta {
+  border: 1px solid #c3cdc5;
+  border-radius: 50px;
+  padding: 12px 17px;
+  gap: 24px;
+}
+.navCta svg {
+  width: 16px;
+  height: 16px;
+}
+.menuButton {
+  display: none;
+}
+/* The shared language switch, Log in button and user-menu trigger, restyled to this page's outlined pills */
+.headerActions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.headerActions > button,
+.headerActions > div > button {
+  min-height: 42px;
+  border: 1px solid #c3cdc5;
+  border-radius: 50px;
+  background: transparent;
+  box-shadow: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+.headerActions > button {
+  padding: 0 18px;
+  white-space: nowrap;
+}
+/* The header tagline needs room; below 1200px it gives way to the navigation */
+@media (max-width: 1200px) {
+  .headerNote {
+    display: none;
+  }
+}
+.headerActions > button:hover,
+.headerActions > div > button:hover {
+  background: #e7efea;
+}
+/* The hero takes the photo's own proportions (2448 × 1682), full page width, so the whole photo
+   is shown, edge to edge, instead of being cropped to the window height */
+.hero {
+  aspect-ratio: 2448 / 1682;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: #a6d4dc;
+}
+.heroPhoto {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  inset: 0;
+  /* Same ratio as the box, so "cover" crops nothing */
+  object-fit: cover;
+  z-index: -3;
+  /* Unzoomed at rest (whole photo); the pointer parallax zooms in slightly while it moves the photo */
+  transform: scale(var(--look-zoom, 1)) translate(var(--look-x), var(--look-y));
+}
+.photoShade {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(229, 242, 242, 0.83) 0%,
+      rgba(223, 242, 241, 0.64) 24%,
+      rgba(219, 239, 237, 0.03) 56%
+    ),
+    linear-gradient(0deg, rgba(0, 38, 46, 0.48), transparent 28%);
+}
+.heroTop {
+  position: absolute;
+  top: 30px;
+  left: 4.3%;
+  right: 4.3%;
+  display: flex;
+  justify-content: space-between;
+  color: #244b50;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 1.8px;
+}
+.heroTop > span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.heroTop i {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: #305f4a;
+  border-radius: 100%;
+}
+.heroCopy {
+  position: absolute;
+  left: 7.8%;
+  top: 21%;
+  max-width: 650px;
+}
+.eyebrow {
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 2px;
+  line-height: 1.7;
+}
+.heroCopy h1 {
+  font-size: clamp(52px, 5.65vw, 92px);
+  line-height: 1.21;
+  font-weight: 700;
+  letter-spacing: -3.5px;
+  margin: 28px 0 30px;
+}
+.further {
+  position: relative;
+  display: inline-block;
+}
+.further svg {
+  position: absolute;
+  left: 0;
+  bottom: -11px;
+  width: 100%;
+  height: 26px;
+  stroke: #b56d31;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.period {
+  color: #a4612e;
+}
+.heroIntro {
+  font-size: 14px;
+  line-height: 2.05;
+  letter-spacing: 1px;
+  color: #284f52;
+}
+.exploreButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 38px;
+  background: #143d40;
+  color: white !important;
+  font-size: 12px;
+  padding: 17px 22px;
+  border-radius: 4px;
+  margin-top: 30px;
+}
+.exploreButton:hover {
+  background: #24575a;
+}
+.exploreButton svg {
+  width: 19px;
+}
+.photoCaption {
+  position: absolute;
+  right: 7.4%;
+  top: 52%;
+  color: #fff;
+  text-shadow: 0 1px 8px #12424d;
+  font-size: 17px;
+  line-height: 1.8;
+  letter-spacing: 3px;
+}
+.captionLine {
+  display: block;
+  width: 28px;
+  border-top: 1px solid white;
+  margin-bottom: 20px;
+}
+.heroBottom {
+  position: absolute;
+  bottom: 28px;
+  left: 4.3%;
+  right: 4.3%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  gap: 20px;
+}
+.scrollHint {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+.scrollHint > span:last-child {
+  font-size: 8px;
+  opacity: 0.8;
+  letter-spacing: 2px;
+}
+.scrollLine {
+  height: 35px;
+  width: 1px;
+  background: #ffffff6b;
+  position: relative;
+  overflow: hidden;
+}
+.scrollLine::after {
+  content: '';
+  position: absolute;
+  width: 1px;
+  height: 16px;
+  background: white;
+  top: 0;
+}
+.motionButton {
+  border: 1px solid #ffffff70;
+  border-radius: 30px;
+  background: #12383f8c;
+  color: white !important;
+  padding: 9px 13px;
+  font-size: 10px !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.explore {
+  max-width: 1380px;
+  margin: auto;
+  padding: 95px 7% 90px;
+}
+.sectionHead {
+  display: grid;
+  grid-template-columns: 1fr 1.7fr auto;
+  align-items: start;
+  gap: 25px;
+  margin-bottom: 45px;
+}
+.sectionHead > .eyebrow {
+  padding-top: 12px;
+  color: var(--muted);
+}
+.sectionHead h2 {
+  font-size: 43px;
+  font-weight: 550;
+  letter-spacing: -2px;
+}
+.sectionHead p:not(.eyebrow) {
+  margin-top: 15px;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--muted);
+}
+.sectionMark {
+  font-size: 47px;
+  font-weight: 300;
+}
+.chapters {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.chapter {
+  text-align: left;
+  padding: 27px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  min-height: 290px;
+  display: flex;
+  flex-direction: column;
+}
+.chapter:hover {
+  border-color: #6e8b80;
+}
+.blue {
+  background: #e3ecec;
+}
+.sand {
+  background: #ecebdf;
+}
+.green {
+  background: #e4eadd;
+}
+.chapterTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  letter-spacing: 1.6px;
+}
+.chapterTop svg {
+  width: 20px;
+}
+.chapter h3 {
+  font-size: 36px;
+  font-weight: 550;
+  letter-spacing: -1.5px;
+  margin: 35px 0 13px;
+}
+.chapter h3 span {
+  color: #70897d;
+}
+.chapter > p {
+  font-size: 12px;
+  line-height: 1.95;
+  max-width: 24em;
+  color: #48625e;
+}
+.chapterFoot {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 28px;
+  margin-top: auto;
+  font-size: 10px;
+}
+.chapterFoot > span {
+  font-size: 9px;
+  color: #526b63;
+}
+.about {
+  border-top: 1px solid #dce2d9;
+  margin: 0 7%;
+  padding: 65px 0 75px;
+  display: flex;
+  gap: 45px;
+  align-items: flex-start;
+}
+.aboutSymbol {
+  font-size: 70px;
+  line-height: 1;
+  color: #627d68;
+}
+.about .eyebrow {
+  color: var(--muted);
+}
+.about h2 {
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1.6;
+  margin: 16px 0;
+  letter-spacing: -0.7px;
+}
+.about p:not(.eyebrow) {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 2;
+}
+.backTop {
+  margin: auto 0 0 auto;
+  border: 1px solid #bfcbbd;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 100%;
+  font-size: 23px;
+}
+.footer {
+  border-top: 1px solid #dce2d9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 25px 4.3%;
+  font-size: 9px;
+  letter-spacing: 1.3px;
+  color: var(--muted);
+}
+.dialogBackdrop {
+  position: fixed;
+  inset: 0;
+  background: #0d2e37a6;
+  backdrop-filter: blur(7px);
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+.dialog {
+  background: var(--paper);
+  padding: 45px;
+  width: min(100%, 490px);
+  border-radius: 8px;
+  box-shadow: 0 20px 100px #002a3340;
+}
+.dialog h2 {
+  font-size: 30px;
+  margin: 20px 0;
+  font-weight: 550;
+}
+.dialog p:not(.eyebrow) {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 2;
+}
+.dialog button {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  margin-top: 30px;
+  background: var(--ink);
+  color: white;
+  border: 0;
+  padding: 13px 20px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .heroPhoto {
+    transition: transform 700ms ease-out;
+  }
+  .heroCopy > * {
+    animation: rise 1000ms both;
+  }
+  .heroCopy > :nth-child(2) {
+    animation-delay: 100ms;
+  }
+  .heroCopy > :nth-child(3) {
+    animation-delay: 220ms;
+  }
+  .heroCopy > :nth-child(4) {
+    animation-delay: 340ms;
+  }
+  .scrollLine::after {
+    animation: flow 2.4s infinite;
+  }
+  .chapter {
+    transition:
+      transform 260ms ease,
+      border-color 260ms;
+  }
+  .chapter:hover {
+    transform: translateY(-5px);
+  }
+  .paused *,
+  .paused *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes flow {
+  from {
+    transform: translateY(-18px);
+  }
+  to {
+    transform: translateY(52px);
+  }
+}
+@media (min-width: 1800px) {
+  .heroCopy {
+    left: 11%;
+  }
+}
+@media (max-width: 1000px) {
+  .header {
+    gap: 20px;
+  }
+  .nav {
+    gap: 18px;
+  }
+  .nav .navCta {
+    padding: 10px 14px;
+    gap: 12px;
+  }
+  .heroCopy {
+    left: 6%;
+  }
+  .heroCopy h1 {
+    font-size: 65px;
+  }
+  /*
+   * Narrower screens: copy over the photo would cover the person, so stack the copy above the
+   * whole photo. The photo keeps its own proportions at full width; the caption, scroll hint and
+   * motion button stay on the photo.
+   */
+  .hero {
+    aspect-ratio: auto;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, #e9f4f4 0%, #d6eaec 100%);
+  }
+  .heroTop {
+    position: static;
+    order: 1;
+    padding: 28px 6% 0;
+  }
+  .heroCopy {
+    position: static;
+    order: 2;
+    max-width: none;
+    padding: 36px 6% 44px;
+  }
+  .heroPhoto {
+    position: relative;
+    order: 3;
+    inset: auto;
+    height: auto;
+    aspect-ratio: 2448 / 1682;
+    transform: none;
+  }
+  /* Only a dark fade at the bottom of the photo, behind the white scroll hint and button */
+  .photoShade {
+    top: auto;
+    height: 140px;
+    background: linear-gradient(0deg, rgba(0, 38, 46, 0.48), transparent);
+  }
+  /* Placed relative to the photo, whose height is 68.7% of the width */
+  .photoCaption {
+    right: 6%;
+    top: auto;
+    bottom: 26vw;
+    font-size: 14px;
+  }
+  .sectionHead {
+    grid-template-columns: 1fr 1.8fr auto;
+  }
+  .chapter {
+    padding: 23px;
+  }
+}
+@media (max-width: 680px) {
+  .header {
+    height: 76px;
+    padding: 0 6%;
+    position: relative;
+    z-index: 5;
+    /* The desktop 40px gap doesn't fit brand, menu, language switch and Log in on one phone row */
+    gap: 8px;
+  }
+  .brand {
+    font-size: 30px;
+  }
+  /* Brand, menu, language switch and Log in share one row on phones; none of them may wrap */
+  .brand,
+  .menuButton,
+  .headerActions > button {
+    white-space: nowrap;
+  }
+  .menuButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    background: none;
+    border: 0;
+    padding: 12px 4px;
+    font-size: 12px !important;
+  }
+  .menuButton span {
+    font-size: 22px;
+  }
+  .headerActions {
+    gap: 6px;
+  }
+  .headerActions > button {
+    padding: 0 10px;
+    font-size: 12px;
+  }
+}
+/* Smallest phones: the Log in button keeps its text but drops its icon */
+@media (max-width: 400px) {
+  .headerActions > button[aria-haspopup] svg {
+    display: none;
+  }
+}
+@media (max-width: 680px) {
+  .nav {
+    display: none;
+    position: absolute;
+    top: 76px;
+    left: 0;
+    right: 0;
+    background: var(--paper);
+    padding: 20px 6% 28px;
+    border-top: 1px solid #dce2d9;
+    box-shadow: 0 10px 20px #17383d12;
+  }
+  .navOpen {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+  }
+  .nav .navCta {
+    margin-left: auto;
+    padding: 10px;
+    gap: 12px;
+  }
+  .photoShade {
+    height: 90px;
+  }
+  .heroTop {
+    padding-top: 22px;
+    font-size: 8px;
+    letter-spacing: 1.2px;
+  }
+  .heroTop > span:last-child {
+    display: none;
+  }
+  .heroCopy {
+    padding: 28px 6% 36px;
+  }
+  .eyebrow {
+    font-size: 8px;
+    letter-spacing: 1.5px;
+  }
+  .heroCopy h1 {
+    font-size: clamp(46px, 11.5vw, 65px);
+    letter-spacing: -2px;
+    margin: 19px 0 25px;
+    line-height: 1.18;
+  }
+  .further svg {
+    bottom: -9px;
+    height: 18px;
+  }
+  .heroIntro {
+    font-size: 12px;
+    line-height: 1.9;
+  }
+  .exploreButton {
+    padding: 13px 17px;
+    margin-top: 20px;
+    font-size: 11px;
+    gap: 25px;
+  }
+  /* The photo is too small here: the caption would sit on the person */
+  .photoCaption {
+    display: none;
+  }
+  .captionLine {
+    width: 20px;
+    margin-bottom: 12px;
+  }
+  .heroBottom {
+    left: 6%;
+    right: 6%;
+    bottom: 22px;
+  }
+  .scrollHint {
+    font-size: 10px;
+    gap: 10px;
+  }
+  .scrollHint > span:last-child {
+    display: none;
+  }
+  .motionButton {
+    font-size: 9px !important;
+  }
+  .explore {
+    padding: 60px 6%;
+  }
+  .sectionHead {
+    grid-template-columns: 1fr auto;
+    gap: 18px;
+    margin-bottom: 30px;
+  }
+  .sectionHead > .eyebrow {
+    grid-column: 1/-1;
+    padding: 0;
+  }
+  .sectionHead h2 {
+    font-size: 35px;
+  }
+  .sectionHead p:not(.eyebrow) {
+    font-size: 12px;
+  }
+  .sectionMark {
+    font-size: 37px;
+  }
+  .chapters {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .chapter {
+    min-height: 235px;
+    padding: 25px;
+  }
+  .chapter h3 {
+    margin-top: 22px;
+  }
+  .chapter > p {
+    max-width: none;
+  }
+  .chapterFoot {
+    padding-top: 24px;
+  }
+  .about {
+    margin: 0 6%;
+    padding: 45px 0;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .aboutSymbol {
+    font-size: 42px;
+  }
+  .about > div {
+    flex: 1;
+    min-width: 200px;
+  }
+  .about h2 {
+    font-size: 23px;
+  }
+  .about p:not(.eyebrow) {
+    font-size: 12px;
+  }
+  .backTop {
+    width: 38px;
+    height: 38px;
+    font-size: 19px;
+  }
+  .desktopBreak {
+    display: none;
+  }
+  .footer {
+    padding: 24px 6%;
+    flex-wrap: wrap;
+    font-size: 8px;
+  }
+  .footer > span:nth-child(2) {
+    display: none;
+  }
+  .dialog {
+    padding: 30px;
+  }
+  .dialog h2 {
+    font-size: 25px;
+  }
+}

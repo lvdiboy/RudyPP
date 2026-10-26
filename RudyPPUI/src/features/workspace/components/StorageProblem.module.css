@@ -1,0 +1,5 @@
+.problem {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+}

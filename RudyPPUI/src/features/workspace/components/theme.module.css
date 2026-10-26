@@ -1,0 +1,44 @@
+/*
+ * Workspace look, taken from the ocean home page: warm off-white, deep teal text, grey-green
+ * secondary text, light sea / sand / green tints, a muted warm-brown accent, thin borders and
+ * soft shadows.
+ *
+ * Applied to the workspace chrome (sidebar, top bar) and to the tool pages only, NOT to the
+ * whole app: the shared components (Button, TextField, Alert, UserMenu...) read the global
+ * tokens, so re-pointing those tokens here restyles them inside the workspace without touching
+ * the home, login or account pages. The learning page keeps the original lab tokens.
+ */
+/* Workspace colors only; safe on the layout root because nothing reads them by default */
+.vars {
+  --workspace-bg: #f7f8f3;
+  --workspace-surface: #ffffff;
+  --workspace-ink: #16383c;
+  --workspace-muted: #516b6a;
+  --workspace-line: #dce2d9;
+  --workspace-sea: #e3ecec;
+  --workspace-sand: #ecebdf;
+  --workspace-green: #e4eadd;
+  --workspace-accent: #9a5a2a;
+  --workspace-shadow: 0 1px 2px rgb(22 56 60 / 6%), 0 8px 24px rgb(22 56 60 / 6%);
+  --workspace-radius: 12px;
+}
+
+/* Colors plus the shared-component tokens re-pointed to them: chrome and tool pages only */
+.theme {
+  composes: vars;
+
+  --color-ink: var(--workspace-ink);
+  --color-ink-muted: var(--workspace-muted);
+  --color-paper: var(--workspace-bg);
+  --color-surface: var(--workspace-surface);
+  --color-highlight: #ecdcc0;
+  --color-teal: #cfe3e1;
+  --color-pink: #f2dcd6;
+  --color-focus: #b35416;
+  --shadow-sticker: none;
+  --border-width: 1px;
+  --radius-sm: 8px;
+  --radius-md: var(--workspace-radius);
+
+  color: var(--workspace-ink);
+}

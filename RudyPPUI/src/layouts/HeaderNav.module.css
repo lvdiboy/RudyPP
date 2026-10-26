@@ -1,0 +1,24 @@
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+  padding: 0;
+  list-style: none;
+}
+
+.link {
+  display: inline-block;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+}
+
+.link:hover {
+  background: var(--color-highlight);
+}
+
+/* NavLink sets aria-current="page"; the underline shows it without relying on color */
+.active {
+  box-shadow: inset 0 -3px 0 var(--color-ink);
+  font-weight: 700;
+}
