@@ -1,0 +1,65 @@
+/*
+ * Design tokens: the single source of truth for the visual language.
+ * Components read these through var(--token-name) and never hard-code values,
+ * so changing a token here restyles every place that uses it.
+ */
+:root {
+  /* Color roles */
+  --color-paper: #f5f7fb;
+  --color-surface: #ffffff;
+  --color-ink: #1e2246;
+  --color-ink-muted: #4a5078;
+  --color-grid: #dce3f0;
+  --color-focus: #3b5bdb;
+
+  /* Playful accents: used for fills and decoration, with ink text on top */
+  --color-highlight: #ffe066;
+  --color-pink: #f7a1bd;
+  --color-teal: #8fd6cc;
+  /* Darker accent for accent-colored text, which needs stronger contrast */
+  --color-pink-strong: #a3214f;
+
+  /* Typography */
+  /* Chinese text falls back to the platform's CJK fonts (macOS, Windows, Linux/Android) */
+  --font-display:
+    'Bricolage Grotesque', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', 'Segoe UI', system-ui,
+    sans-serif;
+  --font-body:
+    'Atkinson Hyperlegible Next', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', 'Segoe UI',
+    system-ui, sans-serif;
+
+  /* Type scale (ratio 1.25) */
+  --text-sm: 0.875rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5625rem;
+  --text-2xl: 1.953rem;
+  --text-hero: clamp(2.5rem, 1.6rem + 4.5vw, 4.75rem);
+
+  --leading-tight: 1.1;
+  --leading-body: 1.6;
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 5rem;
+
+  /* Shape: larger radius for larger, more important surfaces */
+  --radius-sm: 6px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --border-width: 2px;
+
+  /* A hard offset shadow, like a sticker lifted off the page */
+  --shadow-sticker: 4px 5px 0 var(--color-ink);
+
+  /* Layout */
+  --content-max: 70rem;
+  --measure: 65ch;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+}

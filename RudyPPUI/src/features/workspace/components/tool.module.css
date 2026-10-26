@@ -1,0 +1,142 @@
+/* Shared building blocks for the workspace tool pages (notes, bookmarks, to-dos, overview) */
+
+.panel {
+  padding: clamp(16px, 2vw, 24px);
+  border: 1px solid var(--workspace-line);
+  border-radius: var(--workspace-radius);
+  background: var(--workspace-surface);
+  box-shadow: var(--workspace-shadow);
+}
+
+.panelTitle {
+  margin-bottom: 14px;
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.search {
+  flex: 1 1 16rem;
+  max-width: 28rem;
+}
+
+.form {
+  display: grid;
+  gap: 16px;
+}
+
+.formActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.notice {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+}
+
+.list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: grid;
+  gap: 8px;
+  padding: 16px 18px;
+  border: 1px solid var(--workspace-line);
+  border-radius: var(--workspace-radius);
+  background: var(--workspace-surface);
+}
+
+.itemHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+}
+
+.itemTitle {
+  font-family: var(--font-body);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  color: var(--workspace-muted);
+  font-size: 13px;
+}
+
+/* User text is shown as plain text; line breaks are kept, long words wrap */
+.body {
+  display: -webkit-box;
+  overflow: hidden;
+  color: #2c4a4d;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+}
+
+.itemActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.smallButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--workspace-line);
+  border-radius: 8px;
+  background: var(--workspace-surface);
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.smallButton:hover {
+  border-color: var(--workspace-muted);
+  background: var(--workspace-sea);
+}
+
+.dangerButton {
+  composes: smallButton;
+  color: #8a2f36;
+}
+
+.empty {
+  padding: 28px 20px;
+  border: 1px dashed var(--workspace-line);
+  border-radius: var(--workspace-radius);
+  color: var(--workspace-muted);
+  text-align: center;
+}
+
+.counterOver {
+  color: var(--color-pink-strong);
+  font-weight: 700;
+}

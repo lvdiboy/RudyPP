@@ -15,14 +15,14 @@ public class HealthCheckTest extends BaseTest {
 
     @Test
     public void should_get_health_without_token() throws Exception {
-        this.mockMvc.perform(get("/actuator/health"))
+        this.mockMvc.perform(get("/api/actuator/health"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("UP"));
     }
 
     @Test
     public void should_not_expose_other_actuator_endpoints() throws Exception {
-        this.mockMvc.perform(get("/actuator/env"))
+        this.mockMvc.perform(get("/api/actuator/env"))
                 .andExpect(status().isUnauthorized());
     }
 }

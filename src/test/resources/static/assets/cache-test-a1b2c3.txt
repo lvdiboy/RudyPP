@@ -1,0 +1,1 @@
+Test-only file for UiAccessTest (hashed-asset caching).

@@ -1,0 +1,165 @@
+/* Sidebar + content, after shadcn/ui Dashboard-01's arrangement, in the ocean look */
+.shell {
+  --sidebar-width: 244px;
+
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  min-height: 100vh;
+  background: var(--workspace-bg);
+}
+
+.collapsed {
+  --sidebar-width: 76px;
+}
+
+.skipLink {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 30;
+  padding: 8px 16px;
+  border: 1px solid var(--workspace-ink);
+  border-radius: 8px;
+  background: var(--workspace-surface);
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.skipLink:focus {
+  transform: none;
+}
+
+/* The sidebar stays in view while the page scrolls; it scrolls itself only if taller than the screen */
+.sidebarSlot {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  border-right: 1px solid var(--workspace-line);
+  background: #f1f3ec;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 64px;
+  padding: 8px clamp(16px, 3vw, 32px);
+  border-bottom: 1px solid var(--workspace-line);
+  background: rgb(247 248 243 / 92%);
+  backdrop-filter: blur(8px);
+}
+
+.menuButton {
+  display: none;
+  flex: none;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--workspace-line);
+  border-radius: 10px;
+  background: var(--workspace-surface);
+  color: inherit;
+  cursor: pointer;
+}
+
+.crumbs {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--workspace-muted);
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.crumbCurrent {
+  color: var(--workspace-ink);
+  font-weight: 700;
+}
+
+.actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+}
+
+.main:focus {
+  outline: none;
+}
+
+/* Phone drawer: the same sidebar in a modal dialog from the left edge */
+.drawer {
+  inset: 0 auto 0 0;
+  width: min(300px, 86vw);
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  border: 0;
+  border-right: 1px solid var(--workspace-line);
+  background: #f1f3ec;
+  color: var(--workspace-ink);
+}
+
+.drawer::backdrop {
+  background: rgb(13 46 55 / 40%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .drawer[open] {
+    animation: slide-in 200ms ease-out;
+  }
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(-24px);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 59.99rem) {
+  .shell,
+  .collapsed {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sidebarSlot {
+    display: none;
+  }
+
+  .menuButton {
+    display: grid;
+  }
+}
+
+/* Narrow phones: keep the top bar on one row; the breadcrumb shows just the current section */
+@media (max-width: 30rem) {
+  .crumbs:has(.crumbCurrent) .crumbRoot,
+  .crumbs:has(.crumbCurrent) .crumbRoot + span {
+    display: none;
+  }
+
+  .topbar {
+    gap: 8px;
+    padding-inline: 12px;
+  }
+}

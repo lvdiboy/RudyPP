@@ -1,0 +1,25 @@
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--workspace-line);
+  text-underline-offset: 4px;
+  overflow-wrap: anywhere;
+}
+
+.link:hover {
+  text-decoration-color: var(--workspace-accent);
+}
+
+.link svg {
+  flex: none;
+  color: var(--workspace-muted);
+}
+
+.host {
+  color: var(--workspace-accent);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}

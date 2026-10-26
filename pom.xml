@@ -27,6 +27,10 @@
         <guava.version>33.0.0-jre</guava.version>
         <jwt.version>0.12.3</jwt.version>
         <commons-pool2.version>2.12.0</commons-pool2.version>
+        <!-- React UI build (RudyPPUI/): Maven downloads this Node version, so the build agent needs no Node install -->
+        <frontend-maven-plugin.version>2.0.2</frontend-maven-plugin.version>
+        <node.version>v24.19.0</node.version>
+        <ui.directory>${project.basedir}/RudyPPUI</ui.directory>
     </properties>
 
     <dependencies>
@@ -135,6 +139,85 @@
                                     <version>[3.9,)</version>
                                 </requireMavenVersion>
                             </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--
+                Builds the React UI into RudyPPUI/dist during generate-resources:
+                download Node (cached in ~/.m2) into target/node, then npm ci, lint and build.
+                Skip it with -Dskip.installnodenpm -Dskip.npm to reuse an existing RudyPPUI/dist (as the Jenkins
+                Test and Package stages do) or for backend-only builds.
+                <?m2e ignore?> keeps the IDE's incremental Java builds from running npm.
+            -->
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>${frontend-maven-plugin.version}</version>
+                <configuration>
+                    <workingDirectory>${ui.directory}</workingDirectory>
+                    <installDirectory>${project.build.directory}</installDirectory>
+                    <nodeVersion>${node.version}</nodeVersion>
+                </configuration>
+                <executions>
+                    <execution>
+                        <?m2e ignore?>
+                        <id>ui-install-node</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <?m2e ignore?>
+                        <id>ui-npm-ci</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>ci</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <?m2e ignore?>
+                        <id>ui-lint</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run lint</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <?m2e ignore?>
+                        <id>ui-build</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Type-checks, then writes the production files to RudyPPUI/dist -->
+                            <arguments>run build</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Copies RudyPPUI/dist into the jar's static/ folder, so Spring Boot serves the UI at / -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>ui-copy-dist</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}/static</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${ui.directory}/dist</directory>
+                                </resource>
+                            </resources>
                         </configuration>
                     </execution>
                 </executions>

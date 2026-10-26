@@ -1,0 +1,23 @@
+.alert {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  padding: var(--space-3) var(--space-4);
+  border: var(--border-width) solid var(--color-ink);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+}
+
+/* Meaning is carried by the icon and the text, not by color alone */
+.error {
+  background: var(--color-pink);
+}
+
+.info {
+  background: var(--color-teal);
+}
+
+.icon {
+  flex: none;
+  margin-top: 1px;
+}

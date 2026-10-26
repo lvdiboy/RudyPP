@@ -17,7 +17,7 @@ public class UserControllerTest extends BaseTest {
     @Test
     public void should_sign_up_success() throws Exception {
         UserRegisterRequest userRegisterRequest = new UserRegisterRequest("yasuo111", "123456", "shuangkou");
-        this.mockMvc.perform(post("/users/sign-up")
+        this.mockMvc.perform(post("/api/users/sign-up")
                 .content(objectMapper.writeValueAsString(userRegisterRequest))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -26,7 +26,7 @@ public class UserControllerTest extends BaseTest {
     @Test
     public void should_sign_up_fail_and_get_400_code_when_full_name_is_not_valid() throws Exception {
         UserRegisterRequest invalidFullNameUserRegisterRequest = new UserRegisterRequest("yasuo111", "123456", "11111");
-        this.mockMvc.perform(post("/users/sign-up")
+        this.mockMvc.perform(post("/api/users/sign-up")
                 .content(objectMapper.writeValueAsString(invalidFullNameUserRegisterRequest))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
@@ -36,7 +36,7 @@ public class UserControllerTest extends BaseTest {
 
     @Test
     public void should_get_all_user_fail_when_not_login() throws Exception {
-        this.mockMvc.perform(get("/users")
+        this.mockMvc.perform(get("/api/users")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
